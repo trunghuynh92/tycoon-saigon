@@ -1,7 +1,21 @@
+const ALLOWED_ORIGINS = [
+	'https://tycoon-saigon.vercel.app',
+	'http://localhost:3456',
+	'http://localhost:3000',
+];
+
+const MAX_SYSTEM_LENGTH = 2000;
+const MAX_MESSAGE_LENGTH = 4000;
+
 export default async function handler(req, res) {
 	if (req.method !== 'POST') {
 		res.setHeader('Allow', 'POST');
 		return res.status(405).json({ error: 'Method not allowed' });
+	}
+
+	const origin = req.headers.origin || req.headers.referer || '';
+	if (!ALLOWED_ORIGINS.some(o => origin.startsWith(o))) {
+		return res.status(403).json({ error: 'Forbidden' });
 	}
 
 	const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -9,9 +23,13 @@ export default async function handler(req, res) {
 		return res.status(500).json({ error: 'Server API key not configured' });
 	}
 
-	const { system, userMessage } = req.body;
-	if (!system || !userMessage) {
-		return res.status(400).json({ error: 'Missing system or userMessage' });
+	const { system, userMessage } = req.body || {};
+	if (!system || typeof system !== 'string' || !userMessage || typeof userMessage !== 'string') {
+		return res.status(400).json({ error: 'Invalid payload' });
+	}
+
+	if (system.length > MAX_SYSTEM_LENGTH || userMessage.length > MAX_MESSAGE_LENGTH) {
+		return res.status(400).json({ error: 'Payload too large' });
 	}
 
 	const response = await fetch('https://api.anthropic.com/v1/messages', {

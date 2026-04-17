@@ -32,6 +32,14 @@ var DSCR_FLOOR = 1.0;           // Margin call fires when DSCR drops below this
 var MARGIN_CALL_ENABLED = true;  // Master toggle for the margin call system
 
 // ---- Casino (replaces Free Parking at position 20) ----
+// ---- Trade Abuse Prevention ----
+var TRADES_PER_TURN_LIMIT = 2;        // Max trade proposals per player per turn
+var TRADE_COOLDOWN_TURNS = 3;         // Turns before you can re-propose to the same player after rejection
+var humanTradesThisTurn = 0;          // Counter reset each turn
+var tradeCooldowns = {};              // Key: "initiatorIdx-recipientIdx", value: turn number when cooldown expires
+var lastRejectedTrade = null;         // Fingerprint of the last rejected trade for duplicate detection
+var lastProposedFingerprint = null;   // Fingerprint of the current proposal (set in proposeTrade, used in cancelTrade)
+
 var CASINO_ENABLED = true;
 // Bet tiers: [bet amount, minimum double needed, payout multiplier]
 var CASINO_TIERS = [
@@ -1119,6 +1127,12 @@ function Game() {
 	this.cancelTrade = function() {
 		showCenterPanel('center-game');
 
+		// Set cooldown and duplicate fingerprint on rejection
+		if (currentInitiator && currentRecipient) {
+			var ck = currentInitiator.index + "-" + currentRecipient.index;
+			tradeCooldowns[ck] = turnCounter + TRADE_COOLDOWN_TURNS;
+			lastRejectedTrade = lastProposedFingerprint;
+		}
 
 		if (!player[turn].human) {
 			player[turn].AI.alertList = "";
@@ -1237,6 +1251,8 @@ function Game() {
 
 		showCenterPanel('center-game');
 
+		lastRejectedTrade = null;
+
 		if (!player[turn].human) {
 			player[turn].AI.alertList = "";
 			game.next();
@@ -1257,6 +1273,34 @@ function Game() {
 		}
 
 		var tradeObj = readTrade();
+		var initiator = tradeObj.getInitiator();
+		var recipient = tradeObj.getRecipient();
+
+		// Per-turn trade limit (human players only)
+		if (initiator.human && humanTradesThisTurn >= TRADES_PER_TURN_LIMIT) {
+			boardMsg("<p>" + t('pop_trade_limit') + "</p>");
+			return false;
+		}
+
+		// Cooldown after rejection
+		var cooldownKey = initiator.index + "-" + recipient.index;
+		if (tradeCooldowns[cooldownKey] && turnCounter < tradeCooldowns[cooldownKey]) {
+			var remaining = tradeCooldowns[cooldownKey] - turnCounter;
+			boardMsg("<p>" + t('pop_trade_cooldown', {name: recipient.name, turns: remaining}) + "</p>");
+			return false;
+		}
+
+		// Duplicate trade detection
+		var fingerprint = initiator.index + "-" + recipient.index + "-";
+		for (var fi = 0; fi < 40; fi++) fingerprint += tradeObj.getProperty(fi);
+		fingerprint += "-" + tradeObj.getMoney();
+		if (lastRejectedTrade === fingerprint) {
+			boardMsg("<p>" + t('pop_trade_duplicate') + "</p>");
+			return false;
+		}
+		lastProposedFingerprint = fingerprint;
+
+		if (initiator.human) humanTradesThisTurn++;
 		var money = tradeObj.getMoney();
 		var initiator = tradeObj.getInitiator();
 		var recipient = tradeObj.getRecipient();
@@ -4446,6 +4490,8 @@ function play() {
 	showCenterPanel('center-game');
 
 	doublecount = 0;
+	humanTradesThisTurn = 0;
+	lastRejectedTrade = null;
 	if (p.human) {
 		document.getElementById("nextbutton").focus();
 	}
