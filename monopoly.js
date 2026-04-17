@@ -1,4 +1,11 @@
 // ============================================================
+// Tycoon Saigon — Analytics
+// ============================================================
+function trackEvent(name, data) {
+	try { if (window.va) window.va("event", { name: name, data: data }); } catch(e) {}
+}
+
+// ============================================================
 // Tycoon Saigon — Game Balance Constants
 // Tune these during playtesting.
 // ============================================================
@@ -1350,6 +1357,7 @@ function Game() {
 		if (requested.length > 0) tradeSummary += requested.join(", ");
 		if (money > 0) tradeSummary += (requested.length > 0 ? " + " : "") + "$" + money;
 
+		trackEvent("trade_proposed", { initiator: initiator.name, recipient: recipient.name, human: initiator.human });
 		addAlert(t('msg_trade_init', {name: initiator.name, other: recipient.name}) + " " + tradeSummary);
 
 		if (recipient.human) {
@@ -1530,6 +1538,7 @@ function Game() {
 			// }
 			// document.getElementById("refresh").innerHTML += "<br><br><div><textarea type='text' style='width: 980px;' onclick='javascript:select();' />" + text + "</textarea></div>";
 
+			trackEvent("game_completed", { winner: player[1].name, human: player[1].human, rounds: gameRound });
 			boardMsg("<p>" + t('pop_win', {name: player[1].name}) + "</p><div>", null, 3000);
 
 		} else {
@@ -1613,6 +1622,7 @@ function Game() {
 		p.money = 0;
 		var rentOwed = shortfall;
 
+		trackEvent("fire_sale", { player: p.name, shortfall: rentOwed, round: gameRound });
 		addAlert(p.name + " can't pay $" + rentOwed + " — fire sale!");
 
 		// Phase 1: Sell all houses/hotels at 50%
@@ -2965,6 +2975,7 @@ function executeSnipe(playerIndex, squareIndex) {
 	sp.snipeCard = false;
 	sp.money -= s.price;
 	s.owner = playerIndex;
+	trackEvent("snipe_used", { player: sp.name, property: s.name, price: s.price });
 	addAlert(t('msg_snipe', {name: sp.name, prop: s.name, amount: s.price}));
 
 	// During liquidation, snipe proceeds go to the bankrupt player
@@ -3141,6 +3152,7 @@ function checkBubble() {
 	if (debt >= BUBBLE_THRESHOLD) {
 		crisisActive = true;
 		crisisRound = gameRound;
+		trackEvent("crisis_triggered", { debt: debt, round: gameRound });
 		addAlert(t('msg_crisis', {debt: debt, threshold: BUBBLE_THRESHOLD}));
 
 		// Show persistent crisis banner
@@ -3498,6 +3510,7 @@ function casinoRoll(p, tier) {
 	html += diceChars[d1-1] + " " + diceChars[d2-1];
 	html += "</p>";
 
+	trackEvent("casino_bet", { player: p.name, bet: tier.bet, won: win, payout: win ? tier.payout : 0 });
 	if (win) {
 		p.money += tier.payout;
 		addAlert(t('msg_casino_win', {name: p.name, bet: tier.bet, d1: d1, d2: d2, payout: tier.payout}));
@@ -4626,6 +4639,15 @@ function setup() {
 	for (var i = 1; i <= pcount; i++) {
 		originalPlayers.push({ name: player[i].name, color: player[i].color });
 	}
+
+	// Track game start
+	var aiTypes = [];
+	var humanCount = 0;
+	for (var i = 1; i <= pcount; i++) {
+		if (player[i].human) humanCount++;
+		else if (player[i].AI) aiTypes.push(player[i].name.replace(/ \d+$/, ""));
+	}
+	trackEvent("game_started", { players: pcount, humans: humanCount, ais: aiTypes.join(",") });
 
 	// Show first-roll results, then start the game
 	var rollHtml = "<div style='text-align:center;'>"
