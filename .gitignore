@@ -1,0 +1,4 @@
+apikey.local.js
+node_modules/
+.vercel/
+.env*.local

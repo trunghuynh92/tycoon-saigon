@@ -1,0 +1,807 @@
+// ============================================================
+// Tycoon Saigon — Dual Language System (Vietnamese / English)
+// Load this BEFORE saigonedition.js and monopoly.js
+// ============================================================
+
+var currentLang = 'vi';
+
+var LANG = {
+vi: {
+	// --- Non-property square names ---
+	sq_go: "GO",
+	sq_go_desc: "NHẬN $200 KHI ĐI QUA.",
+	sq_community_chest: "Cộng Đồng",
+	sq_community_chest_desc: "LÀM THEO HƯỚNG DẪN TRÊN THẺ",
+	sq_chance: "Cơ Hội",
+	sq_chance_desc: "LÀM THEO HƯỚNG DẪN TRÊN THẺ",
+	sq_income_tax: "Thuế thu nhập cá nhân",
+	sq_income_tax_desc: "Nộp $200",
+	sq_luxury_tax: "Thuế tiêu thụ đặc biệt",
+	sq_luxury_tax_desc: "Nộp $100",
+	sq_just_visiting: "Thăm Tù",
+	sq_jail: "Nhà Giam",
+	sq_casino: "Sòng Bài",
+	sq_casino_desc: "CASINO — Ra đôi để đặt cược!",
+	sq_go_to_jail: "Vào Tù",
+	sq_go_to_jail_desc: "Đi thẳng vào Tù. Không đi qua GO. Không nhận $200.",
+
+	// --- Utility / Transit descriptions ---
+	util_desc: '&nbsp;&nbsp;&nbsp;&nbsp;Nếu sở hữu 1 trạm, tiền thuê = 4 lần số điểm xúc xắc.<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;Nếu sở hữu cả 2 trạm, tiền thuê = 10 lần số điểm xúc xắc.',
+	trans_desc: '<div style="font-size: 14px; line-height: 1.5;">Tiền thuê<span style="float: right;">$25.</span><br />Nếu sở hữu 2 trạm<span style="float: right;">50.</span><br />Nếu sở hữu 3 trạm<span style="float: right;">100.</span><br />Nếu sở hữu 4 trạm<span style="float: right;">200.</span></div>',
+
+	// --- Tax messages ---
+	tax_luxury_alert: "{name} nộp $100 Thuế tiêu thụ đặc biệt.",
+	tax_luxury_landed: "Bạn đến ô Thuế tiêu thụ đặc biệt. Nộp $100.",
+	tax_income_alert: "{name} nộp $200 Thuế thu nhập cá nhân.",
+	tax_income_landed: "Bạn đến ô Thuế thu nhập cá nhân. Nộp $200.",
+
+	// --- Community Chest cards ---
+	cc0: "Thẻ thoát khỏi nhà giam. Giữ lại đến khi cần, hoặc bán đi.",
+	cc1: "Bán bánh mì thêm buổi tối. Thu về $10.",
+	cc2: "Bán cổ phiếu gia đình. Nhận $50.",
+	cc3: "Bảo hiểm nhân thọ đáo hạn. Nhận $100.",
+	cc4: "Hoàn thuế thu nhập. Nhận $20.",
+	cc5: "Quỹ du lịch đáo hạn. Nhận $100.",
+	cc6: "Nhận tiền thừa kế từ gia đình. Nhận $100.",
+	cc7: "Phí tư vấn khách hàng. Nhận $25.",
+	cc8: "Nằm viện đa khoa. Nộp $100.",
+	cc9: "Ngân hàng tính sai, có lợi cho bạn. Nhận $200.",
+	cc10: "Học phí con cháu. Nộp $50.",
+	cc11: "Khám bác sĩ. Nộp $50.",
+	cc12: "Mừng sinh nhật. Mỗi người chơi tặng bạn $10.",
+	cc13: "Đi thẳng về GO (Nhận $200).",
+	cc14: "THẢM HỌA! Thiên tai đổ bộ Sài Gòn. Mỗi người chơi nộp phạt 5× số điểm xúc xắc.",
+	cc15: "Đi thẳng vào nhà giam. Không đi qua GO. Không nhận $200.",
+
+	// --- Chance cards ---
+	ch0: "Thẻ thoát khỏi nhà giam. Giữ lại đến khi cần, hoặc trao đổi.",
+	ch1: "THẺ SNIPE! Giữ lại. Khi bất động sản bị đấu giá, bạn mua ngay với giá gốc.",
+	ch2: "Phạt vượt tốc độ. Nộp $15.",
+	ch3: "Được bầu làm chủ tịch hội đồng. Trả mỗi người chơi $50.",
+	ch4: "Lùi lại ba ô.",
+	ch5: "TIẾN ĐẾN TRẠM ĐIỆN/NƯỚC gần nhất. Nếu chưa ai sở hữu, bạn có thể mua. Nếu đã có chủ, gieo xúc xắc và trả gấp 10 lần số điểm.",
+	ch6: "Ngân hàng chia cổ tức. Nhận $50.",
+	ch7: "TIẾN ĐẾN TRẠM GIAO THÔNG gần nhất. Nếu chưa ai sở hữu, bạn có thể mua. Nếu đã có chủ, trả gấp đôi tiền thuê thông thường.",
+	ch8: "THUẾ BẤT ĐỘNG SẢN! Kiểm định lại giá trị. $40/nhà, $115/khách sạn.",
+	ch9: "Đi đến Sân bay Tân Sơn Nhất. Nếu đi qua GO, nhận $200.",
+	ch10: "TIẾN ĐẾN Quận 1.",
+	ch11: "TIẾN ĐẾN Quận 7. Nếu đi qua GO, nhận $200.",
+	ch12: "Khoản vay xây dựng đáo hạn. Nhận $150.",
+	ch13: "TIẾN ĐẾN TRẠM GIAO THÔNG gần nhất. Nếu chưa ai sở hữu, bạn có thể mua. Nếu đã có chủ, trả gấp đôi tiền thuê thông thường.",
+	ch14: "TIẾN ĐẾN Phú Nhuận. Nếu đi qua GO, nhận $200.",
+	ch15: "Đi thẳng vào nhà giam. Không đi qua GO. Không nhận $200.",
+
+	// --- UI labels ---
+	btn_start: "Bắt Đầu",
+	btn_roll: "Gieo Xúc Xắc",
+	btn_resign: "Bỏ Cuộc",
+	btn_buy: "Mua",
+	btn_manage: "Quản Lý",
+	btn_trade: "Giao Dịch",
+	btn_buy_house: "Mua nhà",
+	btn_sell_house: "Bán nhà",
+	btn_mortgage: "Thế chấp",
+	btn_propose_trade: "Đề Xuất",
+	btn_cancel_trade: "Hủy",
+	btn_accept_trade: "Chấp Nhận",
+	btn_reject_trade: "Từ Chối",
+	btn_view_stats: "Xem thống kê",
+	btn_timeline: "Biểu đồ",
+	btn_bid: "Đấu giá",
+	btn_pass: "Bỏ qua",
+	btn_yes: "Có",
+	btn_no: "Không",
+	btn_ok: "OK",
+	btn_exit_auction: "Rời đấu giá",
+
+	btn_raise_money: "Gom tiền",
+	btn_back_to_auction: "Quay lại đấu giá",
+	pop_trade_confirm_exchange: "bạn có chắc muốn giao dịch với {name}?",
+	pop_trade_confirm_offer: "bạn có chắc muốn đề xuất giao dịch với {name}?",
+	lbl_select_players: "Chọn số người chơi.",
+	lbl_player: "Người chơi",
+	lbl_human: "Người chơi",
+	lbl_ai_test: "AI (Test)",
+	lbl_ai_shark: "AI (Cá Mập)",
+	lbl_ai_careful: "AI (Cẩn Thận)",
+	lbl_ai_monopolist: "AI (Độc Quyền)",
+	lbl_ai_claude: "AI (Claude)",
+	lbl_title_deed: "B Ả N G &nbsp;&nbsp; G I Á",
+	lbl_rent: "TIỀN THUÊ",
+	lbl_with_1_house: "Với 1 Nhà",
+	lbl_with_2_houses: "Với 2 Nhà",
+	lbl_with_3_houses: "Với 3 Nhà",
+	lbl_with_4_houses: "Với 4 Nhà",
+	lbl_with_hotel: "Với KHÁCH SẠN $",
+	lbl_mortgage_value: "Giá thế chấp $",
+	lbl_houses_cost: "Nhà giá $",
+	lbl_houses_each: ". mỗi căn",
+	lbl_hotels_cost: "Khách sạn, $",
+	lbl_hotels_plus: ". cộng 4 nhà",
+	lbl_monopoly_rule: "Nếu người chơi sở hữu TẤT CẢ ô cùng nhóm màu, tiền thuê ô chưa xây nhà được nhân đôi.",
+	lbl_mortgaged: "THẾ CHẤP",
+	lbl_mortgaged_for: "với giá $",
+	lbl_mortgage_flip: "Lật thẻ mặt này khi bất động sản bị thế chấp",
+	lbl_system_debt: "Nợ Hệ Thống",
+	lbl_property_debt: "Tài Sản & Nợ",
+	lbl_no_js: "Lưu ý: Trang này cần JavaScript để hoạt động.",
+	lbl_refresh: "Tải lại trang để bắt đầu ván mới.",
+	lbl_no_f5: "Lưu ý: Tải lại trang hoặc rời khỏi trang có thể kết thúc ván chơi.",
+	lbl_claude_api: "Claude API Key (cần cho người chơi AI Claude):",
+	lbl_claude_api_note: "Key chỉ lưu trong bộ nhớ — không lưu trữ hay gửi đi đâu ngoài API của Anthropic.",
+
+	// --- Game messages ---
+	msg_turn: "Lượt của {name}.",
+	msg_rolled: "{name} gieo được {total}.",
+	msg_rolled_doubles: "{name} gieo được {total} — đôi!",
+	msg_triple_doubles: "{name} gieo đôi ba lần liên tiếp.",
+	msg_salary: "{name} nhận lương ${amount} khi đi qua GO.",
+	msg_col: "{name} nộp ${amount} chi phí sinh hoạt (gieo {roll} × vòng {lap}).",
+	msg_col_debt: "{name} mắc nợ ngân hàng do chi phí sinh hoạt!",
+	msg_interest: "{name} nộp ${interest} lãi suất trên ${debt} nợ thế chấp{crisis}.",
+	msg_interest_crisis: " (LÃI SUẤT KHỦNG HOẢNG!)",
+	msg_interest_debt: "{name} mắc nợ ngân hàng do lãi suất thế chấp!",
+	msg_landed: "{name} đến ô {prop}.",
+	msg_bought: "{name} mua {prop} với giá {price}.",
+	msg_rent: "{name} trả ${amount} tiền thuê cho {owner}.",
+	msg_mortgage: "{name} thế chấp {prop} với giá ${amount}.",
+	msg_unmortgage: "{name} chuộc lại {prop} với giá ${amount}.",
+	msg_mortgage_refused: "Ngân hàng TỪ CHỐI thế chấp {prop} — đã vượt giới hạn tín dụng.",
+	msg_house: "{name} xây nhà trên {prop}.",
+	msg_hotel: "{name} xây khách sạn trên {prop}.",
+	msg_sell_hotel: "{name} bán khách sạn trên {prop}.",
+	msg_sell_house: "{name} bán nhà trên {prop}.",
+	msg_jail: "{name} bị đưa thẳng vào tù.",
+	msg_jail_doubles: "{name} gieo đôi để thoát tù!",
+	msg_jail_card: '{name} sử dụng thẻ "Thoát Tù Miễn Phí".',
+	msg_jail_fine: "{name} nộp phạt $50 để ra tù.",
+	msg_jail_turn1: "Đây là lượt đầu tiên của {name} trong tù.",
+	msg_jail_turn2: "Đây là lượt thứ hai của {name} trong tù.",
+	msg_jail_turn3: "Đây là lượt thứ ba của {name} trong tù.",
+	msg_margin_call: "*** GỌI KÝ QUỸ cho {name}! Nợ vượt giới hạn! ***",
+	msg_foreclosure: "Ngân hàng tịch thu {prop} (xóa ${amount} nợ).",
+	msg_foreclosure_unmortgaged: "Ngân hàng tịch thu {prop} (chưa thế chấp, mệnh giá ${amount}).",
+	msg_auction_win: "{name} mua {prop} với giá ${amount}.",
+	msg_auction_count: "{count} bất động sản của {name} sẽ được đấu giá!",
+	msg_snipe: "*** SNIPE! {name} chơi thẻ Snipe — giành {prop} với giá gốc ${amount}! ***",
+	msg_snipe_draw: "{name} rút THẺ SNIPE! Giữ lại và dùng khi bất động sản bị đấu giá.",
+	msg_trade_init: "{name} đề xuất giao dịch với {other}.",
+	msg_trade_recv_prop: "{name} nhận {prop} từ {other}.",
+	msg_trade_recv_card: '{name} nhận thẻ "Thoát Tù Miễn Phí" từ {other}.',
+	msg_trade_recv_money: "{name} nhận ${amount} từ {other}.",
+	msg_trade_thinking: "{name} đang suy nghĩ về giao dịch...",
+	msg_trade_accepted: "{name} đã chấp nhận đề xuất của bạn.",
+	msg_trade_declined: "{name} đã từ chối đề xuất của bạn.",
+	msg_trade_counter: "{name} đề xuất ngược: muốn ${amount} thay vào đó.",
+	msg_trade_counter_accepted: "{name} chấp nhận đề xuất ngược của {other}.",
+	msg_trade_counter_rejected: "{name} từ chối đề xuất ngược của {other}. Không thành.",
+	msg_crisis: "*** KHỦNG HOẢNG TÀI CHÍNH! Nợ hệ thống ${debt} vượt ${threshold}! Lãi suất tăng vọt! ***",
+	msg_crisis_end: "Khủng hoảng tài chính kết thúc. Lãi suất trở về {rate}%.",
+	msg_catastrophe: "{name} nộp ${cost} thuế thảm họa (gieo {roll} × {mult}).",
+	msg_catastrophe_debt: "{name} mắc nợ từ thảm họa!",
+	msg_prop_tax: "{name} nộp ${cost} thuế bất động sản ({houses} nhà, {hotels} khách sạn).",
+	msg_prop_tax_debt: "{name} mắc nợ từ thuế bất động sản!",
+	msg_casino_skip: "{name} ghé Sòng Bài nhưng quyết định không chơi.",
+	msg_casino_broke: "{name} không đủ tiền để chơi tại Sòng Bài.",
+	msg_casino_walk: "{name} rời khỏi Sòng Bài.",
+	msg_casino_win: "*** SÒNG BÀI: {name} đặt ${bet}, gieo {d1}-{d2}, THẮNG ${payout}! ***",
+	msg_casino_loss: "SÒNG BÀI: {name} đặt ${bet}, gieo {d1}-{d2}. Thua.",
+	msg_eliminated: "{name} bị loại.",
+	msg_bankrupt_sold: "{name} bán nhà được ${amount}.",
+	msg_bankrupt_pays: "{name} trả ${amount} cho {creditor}.",
+	msg_bankrupt_survives: "*** {name} sống sót qua bán tháo với ${amount}! ***",
+	msg_bankrupt_short: "{creditor} nhận ${paid} — thiếu ${deficit}.",
+	msg_received: "{name} nhận ${amount} từ {cause}.",
+	msg_lost: "{name} mất ${amount} từ {cause}.",
+	msg_lost_cc: "{name} mất ${amount} cho Cộng Đồng.",
+	msg_lost_ch: "{name} mất ${amount} cho Cơ Hội.",
+	msg_raised_enough: "{name} đã đủ tiền! {count} bất động sản được trả lại.",
+
+	// --- Popup messages ---
+	pop_resign: "Bạn có chắc muốn bỏ cuộc?",
+	pop_bankrupt: "{name} phá sản! Ngân hàng sẽ tịch thu và đấu giá tất cả bất động sản. Tiền thu được dùng trả nợ.",
+	pop_win: "Chúc mừng, {name}, bạn đã chiến thắng!",
+	pop_buy_prompt: "Bạn đến ô {prop}.",
+	pop_buy_btn: "Mua (${price})",
+	pop_too_expensive: "{name}, bạn cần thêm ${amount} để mua {prop}.",
+	pop_mortgage_confirm: "{name}, bạn có chắc muốn thế chấp {prop} với giá ${amount}?",
+	pop_unmortgage_confirm: "{name}, bạn có chắc muốn chuộc lại {prop} với giá ${amount}?",
+	pop_unmortgage_cost: "Bạn cần thêm ${amount} để chuộc lại {prop}.",
+	pop_house_cost: "Bạn cần thêm ${amount} để mua nhà cho {prop}.",
+	pop_hotel_cost: "Bạn cần thêm ${amount} để mua khách sạn cho {prop}.",
+	pop_no_houses: "Tất cả 32 nhà đều đã được sở hữu. Bạn phải đợi.",
+	pop_no_hotels: "Tất cả 12 khách sạn đều đã được sở hữu. Bạn phải đợi.",
+	pop_auction_title: "Đấu giá {prop}",
+	pop_auction_highest: "Giá cao nhất = ${amount} ({name})",
+	pop_auction_your_turn: "{name}, đến lượt bạn đấu giá.",
+	pop_auction_na: "Chưa có",
+	pop_auction_empty: "Vui lòng nhập giá.",
+	pop_auction_nan: "Giá phải là số.",
+	pop_auction_funds: "Bạn không đủ tiền để đấu ${amount}.",
+	pop_auction_low: "Giá phải cao hơn giá cao nhất. (${amount})",
+	pop_auction_exit: "{name} rời đấu giá.",
+	pop_auction_pass: "{name} bỏ qua.",
+	pop_auction_bid: "{name} đấu giá ${amount}.",
+	pop_trade_must_select: "Phải chọn ít nhất một bất động sản để giao dịch.",
+	pop_trade_proposed: "{initiator} đề xuất giao dịch với bạn, {recipient}. Bạn có thể chấp nhận, từ chối, hoặc sửa đổi.",
+	pop_trade_claude_thinking: "{name} đang tham vấn AI Claude...",
+	pop_snipe_prompt: "Dùng Thẻ Snipe?",
+	pop_snipe_desc: "{prop} sắp được đấu giá! Bạn có thể chơi thẻ Snipe để mua với giá gốc: ${price}",
+	pop_snipe_cash: "Tiền của bạn: ${amount}",
+	pop_snipe_cant_afford: "Bạn không đủ tiền trả giá gốc!",
+	pop_jail_in: "Bạn đang trong tù.",
+	pop_jail_pay: "Nộp phạt ($50)",
+	pop_jail_card: "Dùng thẻ Thoát Tù",
+	pop_jail_must_pay: "Bạn phải nộp phạt $50.",
+	pop_jail_doubles: "Bạn gieo đôi để thoát tù!",
+	pop_jail_3doubles: "Bạn gieo đôi ba lần liên tiếp. Vào tù.",
+	pop_rent_collected: "Bạn đến ô {prop}. {owner} thu ${amount} tiền thuê.",
+	pop_mortgaged_no_rent: "Bạn đến ô {prop}. Bất động sản đã thế chấp; không thu tiền thuê.",
+	pop_casino_landed: "Bạn đến ô Sòng Bài. Ra đôi để đặt cược và thắng!",
+	pop_casino_skip: "Bạn bỏ qua. Khôn ngoan.",
+	pop_timeline_popup: "Vui lòng cho phép popup để xem biểu đồ.",
+	pop_col_title: "Chi Phí Sinh Hoạt",
+	pop_col_desc: "{name}, cuộc sống ở Sài Gòn ngày càng đắt đỏ.",
+	pop_col_roll: "Xúc xắc đầu lượt: {roll}",
+	pop_col_lap: "Vòng của bạn: {lap}",
+	pop_col_cost: "Chi phí sinh hoạt: -${cost}",
+	pop_interest_title: "Lãi Suất Thế Chấp Đến Hạn",
+	pop_interest_crisis_title: "Lãi Suất Thế Chấp Đến Hạn — KHỦNG HOẢNG!",
+	pop_interest_desc: "{name} phải trả lãi trên nợ thế chấp.",
+	pop_interest_debt: "Tổng nợ: ${debt}",
+	pop_interest_amount: "Lãi suất ({rate}): -${interest}",
+	pop_interest_net: "Ròng trong vòng này: ${net}",
+	pop_crisis_title: "KHỦNG HOẢNG TÀI CHÍNH!",
+	pop_crisis_desc: "Tổng nợ thế chấp ở Sài Gòn đã chạm ${debt}.",
+	pop_crisis_spike: "Bong bóng đã vỡ! Lãi suất tăng vọt lên {rate}% trong vòng này.",
+	pop_crisis_warn: "Người chơi vay quá mức hãy cẩn thận!",
+	pop_margin_title: "GỌI KÝ QUỸ",
+	pop_margin_desc: "Ngân hàng đã thu hồi khoản vay của {name}.",
+	pop_margin_dscr: "Thu nhập không đủ trả lãi vay.",
+	pop_margin_foreclosed: "Tịch thu: {list}",
+	pop_margin_new_dscr: "",
+	pop_mortgage_refused_title: "Ngân hàng TỪ CHỐI thế chấp",
+	pop_mortgage_refused_desc: "Bạn cần thêm thu nhập (tiền thuê) hoặc giảm nợ hiện tại.",
+
+	// --- Greeting screen ---
+	greet_tagline: "Trò chơi bất động sản Sài Gòn",
+	greet_overview: "Một biến thể Monopoly lấy cảm hứng từ các quận và địa danh TP.HCM, với cơ chế kinh tế vĩ mô thay đổi hoàn toàn cuộc chơi — lãi suất thế chấp, chi phí sinh hoạt, bong bóng tài chính, và đấu giá thanh lý tài sản.",
+	greet_mechanics_title: "Cơ Chế Đặc Biệt",
+	greet_mortgage_title: "Lãi Suất Thế Chấp",
+	greet_mortgage_desc: "Mỗi bất động sản thế chấp tích lũy 10% lãi suất mỗi vòng. Lãi được tính khi đi qua GO. Thế chấp chồng chất sẽ đẩy nhanh vòng xoáy phá sản.",
+	greet_col_title: "Chi Phí Sinh Hoạt",
+	greet_col_desc: "Mỗi lần qua GO, bạn trả phí = lần gieo đầu tiên × số vòng đã đi. Càng chơi lâu càng tốn kém — buộc người chơi phải giao dịch thay vì giữ thế bế tắc.",
+	greet_bubble_title: "Bong Bóng & Sụp Đổ",
+	greet_bubble_desc: "Khi tổng nợ thế chấp vượt $1000, Khủng Hoảng Tài Chính bùng nổ: lãi suất tăng lên 25%, người chơi vay quá mức bị gọi ký quỹ và tịch thu tài sản.",
+	greet_snipe_title: "Thẻ Snipe",
+	greet_snipe_desc: "Thẻ giữ được. Khi bất động sản bị đấu giá hoặc thanh lý, bạn giành quyền mua với giá gốc — cơ chế lật ngược tình thế chính của trò chơi.",
+	greet_firesale_title: "Phá Sản Thanh Lý",
+	greet_firesale_desc: "Không có chuyện thừa kế đế chế. Tài sản phá sản được đấu giá từng cái một. Người phá sản giữ lại tài sản chưa bán nếu trả đủ nợ.",
+	greet_ai_title: "Đối Thủ AI",
+	greet_ai_desc: "4 tính cách AI: Cá Mập (tấn công), Cẩn Thận (phòng thủ), Độc Quyền (chiến lược), và Claude (dùng AI thật để đàm phán giao dịch).",
+	greet_casino_title: "Sòng Bài",
+	greet_casino_desc: "Thay thế ô Đỗ Xe Miễn Phí. Chọn mức cược và gieo đôi để thắng — từ $10 thắng $50 (đôi bất kỳ) đến $60 thắng $1000 (chỉ đôi 6). Rủi ro cao, thưởng lớn.",
+	casino_title: "🎰 SÒNG BÀI 🎰",
+	casino_place_bet: "Đặt cược và gieo xúc xắc!",
+	casino_need_doubles: "Bạn cần gieo đôi để thắng. Mức cược cao cần đôi lớn hơn.",
+	casino_walk_away: "Bỏ qua",
+	casino_roll_title: "🎲 Gieo Xúc Xắc 🎲",
+	casino_bets: "{name} đặt ${bet} (cần đôi {min}+)",
+	casino_jackpot: "TRÚNG LỚN! +${payout}",
+	casino_net_profit: "Lãi ròng: ${profit}",
+	casino_no_luck: "Không may. -${bet}",
+	casino_rolled_low: "Gieo đôi {rolled} — cần {min}+",
+	casino_tier_any: "${bet} — Đôi bất kỳ → Thắng ${payout}",
+	casino_tier_plus: "${bet} — Đôi {min}+ → Thắng ${payout}",
+	casino_tier_only: "${bet} — Chỉ đôi {min} → Thắng ${payout}",
+	greet_play: "Chơi Ngay",
+
+	// --- Deed card labels ---
+	deed_owner: "Chủ sở hữu",
+	deed_unowned: "Chưa có chủ",
+	deed_current_rent: "Tiền thuê hiện tại",
+	deed_houses: "nhà",
+	deed_hotel: "Khách sạn",
+	deed_in_group: "trong nhóm",
+	deed_monopoly: "ĐỘC QUYỀN",
+	msg_jail_rent_penalty: "{name} đang bị điều tra — tài sản bị đóng băng, chỉ thu tiền thuê cơ bản.",
+	msg_jail_rent_frozen: "Tài sản đóng băng — chỉ thu thuê cơ bản",
+	credit_warning: "Gần giới hạn tín dụng",
+	credit_danger: "Vượt giới hạn tín dụng!",
+	help_back: "Quay lại",
+	help_title: "Tycoon Saigon — Hướng Dẫn",
+	help_intro: "Tycoon Saigon dựa trên cơ chế Monopoly cổ điển nhưng thêm các yếu tố kinh tế vĩ mô. Dưới đây là những điểm khác biệt quan trọng.",
+	help_passgo_title: "Đi Qua GO",
+	help_passgo_desc: "Khi đi qua GO: nhận lương $200 → trừ Chi Phí Sinh Hoạt → trừ Lãi Suất Thế Chấp. Nếu tiền âm sau các khoản trừ, ngân hàng sẽ tịch thu tài sản.",
+	help_col_title: "Chi Phí Sinh Hoạt",
+	help_col_detail: "Mỗi lần qua GO: trả = (lần gieo đầu tiên trong lượt) × (số vòng đã đi). Vòng 1 gieo 7 → trả $7. Vòng 10 gieo 7 → trả $70. Càng chơi lâu, phí càng tăng — buộc phải giao dịch thay vì giữ thế bế tắc.",
+	help_interest_title: "Lãi Suất Thế Chấp",
+	help_interest_detail: "Mỗi bất động sản thế chấp tích lũy 10% lãi trên nợ mỗi vòng qua GO. VD: Thế chấp 3 ô tổng $500 → trả $50 lãi mỗi vòng. Nếu không trả nổi → tịch thu tài sản.",
+	help_crisis_title: "Khủng Hoảng Tài Chính",
+	help_crisis_detail: "Khi tổng nợ hệ thống (tất cả người chơi) vượt $1000, khủng hoảng bùng nổ: lãi suất tăng từ 10% → 25%. Khủng hoảng KÉO DÀI cho đến khi tổng nợ giảm dưới $1000. Sau khi kết thúc, có 8 vòng bình yên trước khi khủng hoảng mới có thể xảy ra.",
+	help_credit_title: "Giới Hạn Tín Dụng",
+	help_credit_detail: "Ngân hàng từ chối cho vay thêm nếu thu nhập của bạn (lương + tiền thuê) không đủ trả lãi vay. Nếu vi phạm nghiêm trọng, ngân hàng tịch thu bất động sản rẻ nhất.",
+	help_jail_title: "Nhà Tù",
+	help_jail_detail: "Khi ở tù: bạn vẫn thu tiền thuê NHƯNG chỉ thu thuê cơ bản (không tính nhà/khách sạn). Tin nhắn 'Tài sản đóng băng' sẽ hiển thị. Quyết định: nộp $50 ra tù để thu đầy đủ, hay ở lại để tránh trả tiền thuê cho người khác?",
+	help_firesale_title: "Phá Sản & Bán Tháo",
+	help_firesale_detail: "Khi phá sản: 1) Bán tất cả nhà/khách sạn với giá 50%. 2) Đấu giá từng bất động sản (đắt nhất trước). 3) Nếu đủ tiền trả nợ → sống sót. 4) Không ai thừa kế đế chế — mọi bất động sản đều phải qua đấu giá.",
+	help_snipe_title: "Thẻ Snipe",
+	help_snipe_detail: "Thẻ giữ được từ bộ Cơ Hội. Khi bất động sản bị đấu giá, bạn mua ngay với giá gốc — bỏ qua tất cả đấu giá. Trong bán tháo, bạn được chọn TRƯỚC một bất động sản bất kỳ. Đây là cơ chế lật ngược tình thế chính.",
+	help_casino_title: "Sòng Bài",
+	help_casino_detail: "Thay thế ô Đỗ Xe Miễn Phí. Chọn mức cược ($10-$60), gieo đôi để thắng. Mức cược cao cần đôi lớn hơn. Chỉ được gieo MỘT lần mỗi lượt ghé thăm.",
+	help_cards_title: "Thẻ Đặc Biệt",
+	help_cards_detail: "3 thẻ mới: THẢM HỌA (mọi người gieo và trả 5× xúc xắc), THUẾ BẤT ĐỘNG SẢN ($40/nhà, $115/khách sạn), và THẺ SNIPE (mua bất động sản đấu giá với giá gốc).",
+	help_ai_title: "AI Đối Thủ",
+	help_ai_detail: "Cá Mập: mua hung hăng, vay nhiều, đề xuất giao dịch sớm. Cẩn Thận: giữ tiền, ít xây, không giao dịch. Độc Quyền: nhắm nhóm tốt nhất, trả phí để hoàn thành bộ. Claude: dùng AI thật để đàm phán.",
+	pop_snipe_first_pick: "QUYỀN CHỌN TRƯỚC — {name}",
+	pop_snipe_firesale_desc: "Bán tháo tài sản của {name}! Bạn có thẻ Snipe.",
+	pop_snipe_pick_one: "Chọn MỘT bất động sản với giá gốc trước khi đấu giá bắt đầu:",
+	pop_snipe_cant_afford_short: "Không đủ tiền",
+	pop_snipe_skip_auction: "Bỏ qua — vào đấu giá",
+	pop_snipe_mortgaged: "đã thế chấp",
+	help_snipe: "Thẻ giữ được. Khi bất động sản bị đấu giá hoặc thanh lý, bạn có thể mua ngay với giá gốc — bỏ qua tất cả giá đấu.",
+	help_jail: "Thẻ thoát tù miễn phí. Dùng thay vì nộp phạt $50 hoặc chờ gieo đôi.",
+	help_debt: "Nợ = tổng tiền thế chấp. Mỗi vòng qua GO, bạn phải trả lãi 10% trên số nợ này. Nếu không trả nổi, ngân hàng sẽ tịch thu tài sản của bạn.",
+	help_credit_warn: "Bạn đang vay quá nhiều so với thu nhập. Ngân hàng sẽ không cho vay thêm. Hãy bán nhà hoặc chuộc lại bất động sản để giảm nợ.",
+	help_credit_danger: "Ngân hàng sắp tịch thu tài sản! Thu nhập từ tiền thuê không đủ trả lãi vay. Vòng tiếp theo qua GO, bất động sản rẻ nhất sẽ bị bán đấu giá.",
+
+	// --- Language toggle ---
+	lang_toggle: "EN"
+},
+
+en: {
+	// --- Non-property square names ---
+	sq_go: "GO",
+	sq_go_desc: "COLLECT $200 SALARY AS YOU PASS.",
+	sq_community_chest: "Community Chest",
+	sq_community_chest_desc: "FOLLOW INSTRUCTIONS ON TOP CARD",
+	sq_chance: "Chance",
+	sq_chance_desc: "FOLLOW INSTRUCTIONS ON TOP CARD",
+	sq_income_tax: "Income Tax",
+	sq_income_tax_desc: "Pay $200",
+	sq_luxury_tax: "Luxury Tax",
+	sq_luxury_tax_desc: "Pay $100",
+	sq_just_visiting: "Just Visiting",
+	sq_jail: "Jail",
+	sq_casino: "Casino",
+	sq_casino_desc: "CASINO — Roll doubles to win!",
+	sq_go_to_jail: "Go to Jail",
+	sq_go_to_jail_desc: "Go directly to Jail. Do not pass GO. Do not collect $200.",
+
+	// --- Utility / Transit descriptions ---
+	util_desc: '&nbsp;&nbsp;&nbsp;&nbsp;If one utility is owned rent is 4 times amount shown on dice.<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;If both utilities are owned rent is 10 times amount shown on dice.',
+	trans_desc: '<div style="font-size: 14px; line-height: 1.5;">Rent<span style="float: right;">$25.</span><br />If 2 hubs are owned<span style="float: right;">50.</span><br />If 3 &nbsp; &nbsp; " &nbsp; &nbsp; " &nbsp; &nbsp; "<span style="float: right;">100.</span><br />If 4 &nbsp; &nbsp; " &nbsp; &nbsp; " &nbsp; &nbsp; "<span style="float: right;">200.</span></div>',
+
+	// --- Tax messages ---
+	tax_luxury_alert: "{name} paid $100 Luxury Tax.",
+	tax_luxury_landed: "You landed on Luxury Tax. Pay $100.",
+	tax_income_alert: "{name} paid $200 Income Tax.",
+	tax_income_landed: "You landed on Income Tax. Pay $200.",
+
+	// --- Community Chest cards ---
+	cc0: "Get Out of Jail Free. Keep until needed, or sell it.",
+	cc1: "Sold extra banh mi in the evening. Collect $10.",
+	cc2: "Sold family stocks. Collect $50.",
+	cc3: "Life insurance matures. Collect $100.",
+	cc4: "Income tax refund. Collect $20.",
+	cc5: "Holiday fund matures. Collect $100.",
+	cc6: "You inherit $100 from family.",
+	cc7: "Consulting fee. Collect $25.",
+	cc8: "Hospital fees. Pay $100.",
+	cc9: "Bank error in your favor. Collect $200.",
+	cc10: "School fees. Pay $50.",
+	cc11: "Doctor's fees. Pay $50.",
+	cc12: "It's your birthday. Collect $10 from every player.",
+	cc13: "Advance to GO (Collect $200).",
+	cc14: "CATASTROPHE! Natural disaster hits Saigon. Every player pays 5× their dice roll.",
+	cc15: "Go directly to Jail. Do not pass GO. Do not collect $200.",
+
+	// --- Chance cards ---
+	ch0: "Get Out of Jail Free. Keep until needed, or trade it.",
+	ch1: "SNIPE CARD! Keep this. When a property goes to auction, you can buy it at face value.",
+	ch2: "Speeding fine. Pay $15.",
+	ch3: "You have been elected chairman. Pay each player $50.",
+	ch4: "Go back three spaces.",
+	ch5: "Advance to the nearest Utility. If unowned, you may buy it. If owned, roll dice and pay 10 times the amount.",
+	ch6: "Bank pays you dividend. Collect $50.",
+	ch7: "Advance to the nearest Transit Hub. If unowned, you may buy it. If owned, pay double the usual rent.",
+	ch8: "PROPERTY TAX! Reassessment. $40 per house, $115 per hotel.",
+	ch9: "Advance to Tan Son Nhat Airport. If you pass GO, collect $200.",
+	ch10: "Advance to District 1.",
+	ch11: "Advance to District 7. If you pass GO, collect $200.",
+	ch12: "Building loan matures. Collect $150.",
+	ch13: "Advance to the nearest Transit Hub. If unowned, you may buy it. If owned, pay double the usual rent.",
+	ch14: "Advance to Phu Nhuan. If you pass GO, collect $200.",
+	ch15: "Go directly to Jail. Do not pass GO. Do not collect $200.",
+
+	// --- UI labels ---
+	btn_start: "Start Game",
+	btn_roll: "Roll Dice",
+	btn_resign: "Resign",
+	btn_buy: "Buy",
+	btn_manage: "Manage",
+	btn_trade: "Trade",
+	btn_buy_house: "Buy house",
+	btn_sell_house: "Sell house",
+	btn_mortgage: "Mortgage",
+	btn_propose_trade: "Propose Trade",
+	btn_cancel_trade: "Cancel Trade",
+	btn_accept_trade: "Accept Trade",
+	btn_reject_trade: "Reject Trade",
+	btn_view_stats: "View stats",
+	btn_timeline: "Timeline",
+	btn_bid: "Bid",
+	btn_pass: "Pass",
+	btn_yes: "Yes",
+	btn_no: "No",
+	btn_ok: "OK",
+	btn_exit_auction: "Exit Auction",
+
+	btn_raise_money: "Raise Money",
+	btn_back_to_auction: "Back to Auction",
+	pop_trade_confirm_exchange: "are you sure you want to make this exchange with {name}?",
+	pop_trade_confirm_offer: "are you sure you want to make this offer to {name}?",
+	lbl_select_players: "Select number of players.",
+	lbl_player: "Player",
+	lbl_human: "Human",
+	lbl_ai_test: "AI (Test)",
+	lbl_ai_shark: "AI (Shark)",
+	lbl_ai_careful: "AI (Careful)",
+	lbl_ai_monopolist: "AI (Monopolist)",
+	lbl_ai_claude: "AI (Claude)",
+	lbl_title_deed: "T I T L E&nbsp;&nbsp;D E E D",
+	lbl_rent: "RENT",
+	lbl_with_1_house: "With 1 House",
+	lbl_with_2_houses: "With 2 Houses",
+	lbl_with_3_houses: "With 3 Houses",
+	lbl_with_4_houses: "With 4 Houses",
+	lbl_with_hotel: "With HOTEL $",
+	lbl_mortgage_value: "Mortgage Value $",
+	lbl_houses_cost: "Houses cost $",
+	lbl_houses_each: ". each",
+	lbl_hotels_cost: "Hotels, $",
+	lbl_hotels_plus: ". plus 4 houses",
+	lbl_monopoly_rule: "If a player owns ALL the Lots of any Color-Group, the rent is Doubled on Unimproved Lots in that group.",
+	lbl_mortgaged: "MORTGAGED",
+	lbl_mortgaged_for: "for $",
+	lbl_mortgage_flip: "Card must be turned this side up if property is mortgaged",
+	lbl_system_debt: "System Debt",
+	lbl_property_debt: "Property & Debt",
+	lbl_no_js: "Note: This page will not function without JavaScript.",
+	lbl_refresh: "Refresh this page to start a new game.",
+	lbl_no_f5: "Note: Refreshing this page or navigating away from it may end your game without warning.",
+	lbl_claude_api: "Claude API Key (required for AI Claude players):",
+	lbl_claude_api_note: "Key is kept in memory only — never stored or sent anywhere except Anthropic's API.",
+
+	// --- Game messages ---
+	msg_turn: "It is {name}'s turn.",
+	msg_rolled: "{name} rolled {total}.",
+	msg_rolled_doubles: "{name} rolled {total} — doubles.",
+	msg_triple_doubles: "{name} rolled doubles three times in a row.",
+	msg_salary: "{name} collected a ${amount} salary for passing GO.",
+	msg_col: "{name} paid ${amount} cost of living (roll {roll} × lap {lap}).",
+	msg_col_debt: "{name} is in debt to the bank from cost of living!",
+	msg_interest: "{name} paid ${interest} interest on ${debt} of mortgage debt{crisis}.",
+	msg_interest_crisis: " (CRISIS RATE!)",
+	msg_interest_debt: "{name} is in debt to the bank from mortgage interest!",
+	msg_landed: "{name} landed on {prop}.",
+	msg_bought: "{name} bought {prop} for {price}.",
+	msg_rent: "{name} paid ${amount} rent to {owner}.",
+	msg_mortgage: "{name} mortgaged {prop} for ${amount}.",
+	msg_unmortgage: "{name} unmortgaged {prop} for ${amount}.",
+	msg_mortgage_refused: "Bank REFUSES mortgage on {prop} — credit limit exceeded.",
+	msg_house: "{name} placed a house on {prop}.",
+	msg_hotel: "{name} placed a hotel on {prop}.",
+	msg_sell_hotel: "{name} sold the hotel on {prop}.",
+	msg_sell_house: "{name} sold a house on {prop}.",
+	msg_jail: "{name} was sent directly to jail.",
+	msg_jail_doubles: "{name} rolled doubles to get out of jail.",
+	msg_jail_card: '{name} used a "Get Out of Jail Free" card.',
+	msg_jail_fine: "{name} paid the $50 fine to get out of jail.",
+	msg_jail_turn1: "This is {name}'s first turn in jail.",
+	msg_jail_turn2: "This is {name}'s second turn in jail.",
+	msg_jail_turn3: "This is {name}'s third turn in jail.",
+	msg_margin_call: "*** MARGIN CALL on {name}! Debt exceeds credit limit! ***",
+	msg_foreclosure: "Bank forecloses {prop} (clears ${amount} debt).",
+	msg_foreclosure_unmortgaged: "Bank forecloses {prop} (unmortgaged, face ${amount}).",
+	msg_auction_win: "{name} bought {prop} for ${amount}.",
+	msg_auction_count: "{count} properties from {name} going to auction!",
+	msg_snipe: "*** SNIPE! {name} plays Snipe card — grabs {prop} at face value ${amount}! ***",
+	msg_snipe_draw: "{name} draws a SNIPE CARD! Hold it and use when a property hits the auction block.",
+	msg_trade_init: "{name} initiated a trade with {other}.",
+	msg_trade_recv_prop: "{name} received {prop} from {other}.",
+	msg_trade_recv_card: '{name} received a "Get Out of Jail Free" card from {other}.',
+	msg_trade_recv_money: "{name} received ${amount} from {other}.",
+	msg_trade_thinking: "{name} is thinking about the trade...",
+	msg_trade_accepted: "{name} has accepted your offer.",
+	msg_trade_declined: "{name} has declined your offer.",
+	msg_trade_counter: "{name} counter-offers: wants ${amount} instead.",
+	msg_trade_counter_accepted: "{name} accepted {other}'s counter of ${amount}.",
+	msg_trade_counter_rejected: "{name} rejected {other}'s counter-offer. No deal.",
+	msg_crisis: "*** FINANCIAL CRISIS! System debt ${debt} exceeds ${threshold}! Interest rates spike! ***",
+	msg_crisis_end: "Financial crisis subsides. Interest rates return to {rate}%.",
+	msg_catastrophe: "{name} pays ${cost} catastrophe tax (rolled {roll} × {mult}).",
+	msg_catastrophe_debt: "{name} is in debt from the catastrophe!",
+	msg_prop_tax: "{name} pays ${cost} property tax ({houses} houses, {hotels} hotels).",
+	msg_prop_tax_debt: "{name} is in debt from property tax!",
+	msg_casino_skip: "{name} visits the Casino but decides not to gamble.",
+	msg_casino_broke: "{name} can't afford to gamble at the Casino.",
+	msg_casino_walk: "{name} walks away from the Casino.",
+	msg_casino_win: "*** CASINO: {name} bet ${bet}, rolled {d1}-{d2}, WON ${payout}! ***",
+	msg_casino_loss: "CASINO: {name} bet ${bet}, rolled {d1}-{d2}. Lost.",
+	msg_eliminated: "{name} is eliminated.",
+	msg_bankrupt_sold: "{name} sold buildings for ${amount}.",
+	msg_bankrupt_pays: "{name} pays ${amount} to {creditor}.",
+	msg_bankrupt_survives: "*** {name} survives the fire sale with ${amount}! ***",
+	msg_bankrupt_short: "{creditor} receives ${paid} — short ${deficit}.",
+	msg_received: "{name} received ${amount} from {cause}.",
+	msg_lost: "{name} lost ${amount} from {cause}.",
+	msg_lost_cc: "{name} lost ${amount} to Community Chest.",
+	msg_lost_ch: "{name} lost ${amount} to Chance.",
+	msg_raised_enough: "{name} raised enough! {count} properties returned.",
+
+	// --- Popup messages ---
+	pop_resign: "Are you sure you want to resign?",
+	pop_bankrupt: "{name} is bankrupt! The bank will seize and auction all properties. Proceeds pay debts.",
+	pop_win: "Congratulations, {name}, you have won the game!",
+	pop_buy_prompt: "You landed on {prop}.",
+	pop_buy_btn: "Buy (${price})",
+	pop_too_expensive: "{name}, you need ${amount} more to buy {prop}.",
+	pop_mortgage_confirm: "{name}, are you sure you want to mortgage {prop} for ${amount}?",
+	pop_unmortgage_confirm: "{name}, are you sure you want to unmortgage {prop} for ${amount}?",
+	pop_unmortgage_cost: "You need ${amount} more to unmortgage {prop}.",
+	pop_house_cost: "You need ${amount} more to buy a house for {prop}.",
+	pop_hotel_cost: "You need ${amount} more to buy a hotel for {prop}.",
+	pop_no_houses: "All 32 houses are owned. You must wait until one becomes available.",
+	pop_no_hotels: "All 12 hotels are owned. You must wait until one becomes available.",
+	pop_auction_title: "Auction {prop}",
+	pop_auction_highest: "Highest Bid = ${amount} ({name})",
+	pop_auction_your_turn: "{name}, it is your turn to bid.",
+	pop_auction_na: "N/A",
+	pop_auction_empty: "Please enter a bid.",
+	pop_auction_nan: "Your bid must be a number.",
+	pop_auction_funds: "You don't have enough money to bid ${amount}.",
+	pop_auction_low: "Your bid must be greater than highest bid. (${amount})",
+	pop_auction_exit: "{name} exited the auction.",
+	pop_auction_pass: "{name} passed.",
+	pop_auction_bid: "{name} bid ${amount}.",
+	pop_trade_must_select: "One or more properties must be selected in order to trade.",
+	pop_trade_proposed: "{initiator} has proposed a trade with you, {recipient}. You may accept, reject, or modify the offer.",
+	pop_trade_claude_thinking: "{name} is consulting Claude AI...",
+	pop_snipe_prompt: "Use Snipe Card?",
+	pop_snipe_desc: "{prop} is going to auction! You can play your Snipe card to grab it at face value: ${price}",
+	pop_snipe_cash: "Your cash: ${amount}",
+	pop_snipe_cant_afford: "You cannot afford the face value!",
+	pop_jail_in: "You are in jail.",
+	pop_jail_pay: "Pay fine ($50)",
+	pop_jail_card: "Use Get Out of Jail card",
+	pop_jail_must_pay: "You must pay the $50 fine.",
+	pop_jail_doubles: "You rolled doubles to get out of jail!",
+	pop_jail_3doubles: "You rolled doubles three times in a row. Go to jail.",
+	pop_rent_collected: "You landed on {prop}. {owner} collected ${amount} rent.",
+	pop_mortgaged_no_rent: "You landed on {prop}. Property is mortgaged; no rent was collected.",
+	pop_casino_landed: "You landed on Casino. Roll doubles to bet and win!",
+	pop_casino_skip: "You walked away. Smart money.",
+	pop_timeline_popup: "Please allow popups to view the timeline.",
+	pop_col_title: "Cost of Living",
+	pop_col_desc: "{name}, life in Saigon keeps getting more expensive.",
+	pop_col_roll: "First roll this turn: {roll}",
+	pop_col_lap: "Your lap: {lap}",
+	pop_col_cost: "Cost of living: -${cost}",
+	pop_interest_title: "Mortgage Interest Due",
+	pop_interest_crisis_title: "Mortgage Interest Due — CRISIS!",
+	pop_interest_desc: "{name} owes interest on outstanding mortgages.",
+	pop_interest_debt: "Total debt: ${debt}",
+	pop_interest_amount: "Interest ({rate}): -${interest}",
+	pop_interest_net: "Net this lap: ${net}",
+	pop_crisis_title: "FINANCIAL CRISIS!",
+	pop_crisis_desc: "Total mortgage debt in Saigon has hit ${debt}.",
+	pop_crisis_spike: "The bubble has burst! Interest rates spike to {rate}% this round.",
+	pop_crisis_warn: "Over-leveraged players beware!",
+	pop_margin_title: "MARGIN CALL",
+	pop_margin_desc: "The bank has called in its loans on {name}.",
+	pop_margin_dscr: "Income can no longer cover interest payments.",
+	pop_margin_foreclosed: "Foreclosed: {list}",
+	pop_margin_new_dscr: "",
+	pop_mortgage_refused_title: "Bank REFUSES mortgage",
+	pop_mortgage_refused_desc: "You need more income (rent) or less existing debt.",
+
+	// --- Greeting screen ---
+	greet_tagline: "A Saigon Property Trading Game",
+	greet_overview: "A Monopoly variant themed around HCMC districts and landmarks, with macroeconomic mechanics that change the endgame — mortgage interest, cost of living, financial crises, and fire-sale liquidation auctions.",
+	greet_mechanics_title: "Unique Mechanics",
+	greet_mortgage_title: "Mortgage Interest",
+	greet_mortgage_desc: "Every mortgaged property accrues 10% interest per lap. Interest is charged at GO. Stacking mortgages accelerates the death spiral.",
+	greet_col_title: "Cost of Living",
+	greet_col_desc: "At each GO, pay your first dice roll times your lap count. The longer the game drags, the more expensive it gets — forcing deals instead of stalemates.",
+	greet_bubble_title: "Bubble & Crash",
+	greet_bubble_desc: "When total system debt exceeds $1000, a Financial Crisis erupts: interest spikes to 25%, over-leveraged players get margin-called, and their properties hit the auction block.",
+	greet_snipe_title: "Snipe Card",
+	greet_snipe_desc: "A holdable card. When properties are auctioned or liquidated, play it to grab any one at face value — the primary comeback mechanic.",
+	greet_firesale_title: "Fire-Sale Bankruptcy",
+	greet_firesale_desc: "No empire inheritance. Bankrupt properties are auctioned one by one. The bankrupt player keeps unsold properties if they raise enough to cover debt.",
+	greet_ai_title: "AI Opponents",
+	greet_ai_desc: "4 AI personalities: Shark (aggressive), Careful (defensive), Monopolist (strategic), and Claude (uses real AI for trade negotiation).",
+	greet_casino_title: "Casino",
+	greet_casino_desc: "Replaces Free Parking. Pick a bet tier and roll doubles to win — from $10 for $50 (any double) up to $60 for $1000 (double 6 only). High risk, high reward.",
+	casino_title: "🎰 CASINO 🎰",
+	casino_place_bet: "Place your bet and roll the dice!",
+	casino_need_doubles: "You need doubles to win. Higher bets need higher doubles.",
+	casino_walk_away: "Walk away",
+	casino_roll_title: "🎲 Casino Roll 🎲",
+	casino_bets: "{name} bets ${bet} (need double {min}+)",
+	casino_jackpot: "JACKPOT! +${payout}",
+	casino_net_profit: "Net profit: ${profit}",
+	casino_no_luck: "No luck. -${bet}",
+	casino_rolled_low: "Rolled double {rolled} — needed {min}+",
+	casino_tier_any: "${bet} — Any double → Win ${payout}",
+	casino_tier_plus: "${bet} — Double {min}+ → Win ${payout}",
+	casino_tier_only: "${bet} — Double {min} only → Win ${payout}",
+	greet_play: "Play Now",
+
+	// --- Deed card labels ---
+	deed_owner: "Owner",
+	deed_unowned: "Unowned",
+	deed_current_rent: "Current Rent",
+	deed_houses: "houses",
+	deed_hotel: "Hotel",
+	deed_in_group: "in group",
+	deed_monopoly: "MONOPOLY",
+	msg_jail_rent_penalty: "{name} is under investigation — assets frozen, base rent only.",
+	msg_jail_rent_frozen: "Assets frozen — base rent only",
+	credit_warning: "Approaching credit limit",
+	credit_danger: "Credit limit exceeded!",
+	help_back: "Back",
+	help_title: "Tycoon Saigon — How to Play",
+	help_intro: "Tycoon Saigon is based on classic Monopoly but adds macroeconomic mechanics. Here's what's different.",
+	help_passgo_title: "Passing GO",
+	help_passgo_desc: "When passing GO: collect $200 salary → pay Cost of Living → pay Mortgage Interest. If cash goes negative after deductions, the bank seizes your properties.",
+	help_col_title: "Cost of Living",
+	help_col_detail: "Each time you pass GO: pay = (first dice roll of your turn) × (laps completed). Lap 1 roll 7 = $7. Lap 10 roll 7 = $70. The longer the game drags, the more expensive it gets — forcing deals instead of stalemates.",
+	help_interest_title: "Mortgage Interest",
+	help_interest_detail: "Every mortgaged property accrues 10% interest on the debt each time you pass GO. Example: 3 mortgaged properties totaling $500 = $50 interest per lap. If you can't pay, the bank seizes properties.",
+	help_crisis_title: "Financial Crisis",
+	help_crisis_detail: "When total system debt (all players) exceeds $1000, a crisis erupts: interest spikes from 10% to 25%. The crisis PERSISTS until total debt drops below $1000. After it ends, there's an 8-round cooldown before another can trigger.",
+	help_credit_title: "Credit Limit",
+	help_credit_detail: "The bank refuses new mortgages if your income (salary + rent) can't cover the interest. If you exceed the limit severely, the bank seizes your cheapest properties.",
+	help_jail_title: "Jail",
+	help_jail_detail: "While in jail: you still collect rent BUT only base rent (house/hotel bonuses are frozen). Message 'Assets frozen' will display. Decision: pay $50 to get out and collect full rent, or stay to avoid landing on opponents' properties?",
+	help_firesale_title: "Bankruptcy & Fire Sale",
+	help_firesale_detail: "When bankrupt: 1) Sell all houses/hotels at 50%. 2) Auction each property (most expensive first). 3) If you raise enough to cover debt, you survive. 4) No empire inheritance — every property goes through auction.",
+	help_snipe_title: "Snipe Card",
+	help_snipe_detail: "Holdable card from the Chance deck. When a property is auctioned, you can buy it at face value — bypassing all bids. During fire sales, you get FIRST PICK of any property before auctions begin. The primary comeback mechanic.",
+	help_casino_title: "Casino",
+	help_casino_detail: "Replaces Free Parking. Choose a bet tier ($10-$60), roll doubles to win. Higher bets need higher doubles. You get ONE roll per visit.",
+	help_cards_title: "Special Cards",
+	help_cards_detail: "3 new cards: CATASTROPHE (everyone rolls and pays 5× their roll), PROPERTY TAX ($40/house, $115/hotel), and SNIPE CARD (buy auctioned property at face value).",
+	help_ai_title: "AI Opponents",
+	help_ai_detail: "Shark: buys aggressively, leverages heavily, proposes trades early. Careful: hoards cash, rarely builds, avoids debt. Monopolist: targets the best color group, pays premiums to complete sets. Claude: uses real AI for trade negotiation.",
+	pop_snipe_first_pick: "SNIPE FIRST PICK — {name}",
+	pop_snipe_firesale_desc: "{name}'s fire sale! You hold a Snipe card.",
+	pop_snipe_pick_one: "Pick ONE property at face value before auctions begin:",
+	pop_snipe_cant_afford_short: "Can't afford",
+	pop_snipe_skip_auction: "Skip — go to auctions",
+	pop_snipe_mortgaged: "mortgaged",
+	help_snipe: "Holdable card. When a property goes to auction or liquidation, you can buy it at face value — bypassing all bids.",
+	help_jail: "Get Out of Jail Free card. Use instead of paying the $50 fine or waiting to roll doubles.",
+	help_debt: "Debt = total mortgaged amount. Every time you pass GO, you pay 10% interest on this debt. If you can't pay, the bank seizes your properties.",
+	help_credit_warn: "You're borrowing too much relative to your income. The bank won't lend more. Sell houses or unmortgage properties to reduce debt.",
+	help_credit_danger: "The bank is about to seize your properties! Your rent income can't cover the interest. Next time you pass GO, your cheapest properties will be auctioned off.",
+
+	// --- Language toggle ---
+	lang_toggle: "VI"
+}
+};
+
+// --- Square langKey mapping (non-property squares only) ---
+// Maps square index → { name: langKey, pricetext: langKey }
+var squareLangMap = {
+	0:  { name: 'sq_go', pricetext: 'sq_go_desc' },
+	2:  { name: 'sq_community_chest', pricetext: 'sq_community_chest_desc' },
+	4:  { name: 'sq_income_tax', pricetext: 'sq_income_tax_desc' },
+	7:  { name: 'sq_chance', pricetext: 'sq_chance_desc' },
+	10: { name: 'sq_just_visiting' },
+	17: { name: 'sq_community_chest', pricetext: 'sq_community_chest_desc' },
+	20: { name: 'sq_casino', pricetext: 'sq_casino_desc' },
+	22: { name: 'sq_chance', pricetext: 'sq_chance_desc' },
+	30: { name: 'sq_go_to_jail', pricetext: 'sq_go_to_jail_desc' },
+	33: { name: 'sq_community_chest', pricetext: 'sq_community_chest_desc' },
+	36: { name: 'sq_chance', pricetext: 'sq_chance_desc' },
+	38: { name: 'sq_luxury_tax', pricetext: 'sq_luxury_tax_desc' }
+};
+
+// --- Translation function ---
+function t(key, params) {
+	var str = LANG[currentLang][key];
+	if (str === undefined) {
+		// Fallback to English, then raw key
+		str = LANG.en[key] || key;
+	}
+	if (params) {
+		for (var k in params) {
+			if (params.hasOwnProperty(k)) {
+				str = str.split('{' + k + '}').join(params[k]);
+			}
+		}
+	}
+	return str;
+}
+
+// --- Update all static DOM elements with data-i18n ---
+function updateStaticText() {
+	var els = document.querySelectorAll('[data-i18n]');
+	for (var i = 0; i < els.length; i++) {
+		var key = els[i].getAttribute('data-i18n');
+		var target = els[i].getAttribute('data-i18n-attr');
+		if (target === 'value') {
+			els[i].value = t(key);
+		} else if (target === 'title') {
+			els[i].title = t(key);
+		} else if (target === 'placeholder') {
+			els[i].placeholder = t(key);
+		} else {
+			els[i].textContent = t(key);
+		}
+	}
+}
+
+// --- Refresh board squares and card text after language switch ---
+function refreshBoardLanguage() {
+	// Update non-property square names
+	for (var idx in squareLangMap) {
+		if (squareLangMap.hasOwnProperty(idx)) {
+			var map = squareLangMap[idx];
+			var sq = square[parseInt(idx)];
+			if (sq && map.name) {
+				sq.name = t(map.name);
+				// Update board cell name
+				var cellName = document.getElementById("cell" + idx + "name");
+				if (cellName) cellName.textContent = sq.name;
+				// Update enlarge popup name
+				var enlargeName = document.getElementById("enlarge" + idx + "name");
+				if (enlargeName) enlargeName.textContent = sq.name;
+			}
+			if (sq && map.pricetext) {
+				sq.pricetext = t(map.pricetext);
+				var enlargePrice = document.getElementById("enlarge" + idx + "price");
+				if (enlargePrice) enlargePrice.textContent = sq.pricetext;
+			}
+		}
+	}
+
+	// Update jail text
+	var jailSpan = document.querySelector("#jail > span");
+	if (jailSpan) jailSpan.textContent = t('sq_jail');
+	var enlargeJail = document.getElementById("enlarge40name");
+	if (enlargeJail) enlargeJail.textContent = t('sq_jail');
+
+	// Update card text
+	for (var c = 0; c < communityChestCards.length; c++) {
+		communityChestCards[c].text = t('cc' + c);
+	}
+	for (var c = 0; c < chanceCards.length; c++) {
+		chanceCards[c].text = t('ch' + c);
+	}
+
+	// Update debt meter label
+	var debtLabel = document.querySelector('.debt-meter-label');
+	if (debtLabel) debtLabel.textContent = t('lbl_system_debt');
+
+	// Update static text
+	updateStaticText();
+}
+
+// --- Set language and refresh ---
+function setLang(lang) {
+	currentLang = lang;
+	refreshBoardLanguage();
+	// Update toggle button text
+	var toggles = document.querySelectorAll('.lang-toggle-btn');
+	for (var i = 0; i < toggles.length; i++) {
+		toggles[i].textContent = t('lang_toggle');
+	}
+}
+
+function toggleLang() {
+	setLang(currentLang === 'vi' ? 'en' : 'vi');
+}

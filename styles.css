@@ -1,0 +1,1782 @@
+body {
+	background: #FFF8DC; /* cream — Tycoon Saigon */
+	margin: 0px;
+	min-width: 1075px;
+}
+
+td {
+	font-size: 12px;
+	font-family: arial, sans-serif;
+	border: 1px solid black;
+	text-align: center;
+}
+
+#setup {
+	display: none;
+	margin: 15px;
+}
+
+#moneybar {
+	float: right;
+	border: 0px solid black;
+	background-color: white;
+	margin: 15px;
+	border-radius: 5px;
+	display: none;
+	z-index: 14;
+	position: relative;
+	cursor: default;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+#moneybar table {
+	font-weight: bold;
+	border-spacing: 1px;
+}
+
+#moneybarwrap {
+	position: absolute;
+	min-width: 135px;
+	top: 0px;
+	right: 0px;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+#propertystats {
+	margin-right: 110px;
+}
+
+#refresh {
+	display: none;
+	margin: 15px;
+}
+
+#noF5 {
+	display: none;
+}
+
+#noscript {
+	margin-left: 10px;
+}
+
+#board {
+	display: none;
+	border: 3px solid #0d3318;
+	border-spacing: 3px;
+	margin: 25px;
+	float: left;
+	background: #1a5c2e;
+	border-radius: 4px;
+	box-shadow: inset 0 0 40px rgba(0,0,0,0.3), 0 4px 20px rgba(0,0,0,0.2);
+}
+
+/* #jail rule moved to bottom with corner accents */
+
+
+/* #control removed — now inline in #center-game */
+
+#quickstats {
+	font-size: 11px;
+	font-weight: bold;
+	font-family: arial, sans-serif;
+	border: 1px solid rgba(218,165,32,0.3);
+	padding: 4px 6px;
+	border-radius: 4px;
+	background: rgba(0,0,0,0.2);
+	color: #e0e0d0;
+	text-align: center;
+	width: 100%;
+	box-sizing: border-box;
+}
+#pname {
+	color: #DAA520;
+}
+#pmoney {
+	font-size: 14px;
+	color: #66cc66;
+}
+
+#pname {
+	background-color: white;
+}
+
+#buy {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-height: 0;
+	overflow: hidden;
+}
+
+#landed {
+	padding: 3px;
+	border: 1px solid rgba(255,255,255,0.15);
+	border-top: none;
+	width: 100%;
+	margin: 0px;
+	text-align: center;
+	font-size: 12px;
+	color: #e0e0d0;
+	box-sizing: border-box;
+}
+
+#alert {
+	width: 100%;
+	flex: 1;
+	min-height: 0;
+	margin: 0;
+	padding: 4px 6px;
+	border: 1px solid rgba(255,255,255,0.1);
+	border-radius: 4px;
+	font-family: Consolas, "Courier New", monospace;
+	font-size: 11px;
+	background: rgba(0,0,0,0.25);
+	color: #d0d0c0;
+	overflow-y: auto;
+	box-sizing: border-box;
+}
+
+#manage {
+	width: 100%;
+	border: 1px solid rgba(255,255,255,0.15);
+	display: none;
+	box-sizing: border-box;
+}
+
+#option {
+	border-bottom: 1px solid rgba(255,255,255,0.1);
+	background: rgba(0,0,0,0.15);
+	display: none;
+	vertical-align: middle;
+	padding: 4px;
+	text-align: center;
+	min-height: 26px;
+	color: #e0e0d0;
+}
+
+#buildings {
+	margin: auto;
+	height: 21px;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+#buildings .house {
+	width: 25px;
+	height: 19px;
+	vertical-align: top;
+	float: none;
+}
+
+#buildings .hotel {
+	width: 26px;
+	height: 19px;
+	vertical-align: top;
+	float: none;
+}
+
+#owned {
+	padding: 3px 0px;
+	background: transparent;
+	text-align: center;
+	max-height: 280px;
+	overflow-y: auto;
+	color: #e0e0d0;
+}
+
+#owned .propertycellname {
+	vertical-align: top;
+}
+
+#property {
+	margin-right: 1px;
+	background: white;
+}
+
+/* #trade removed — now #center-trade inside center overlay */
+
+#trade-leftp-name {
+	font-size: 13px;
+	font-weight: bold;
+}
+
+#trade-leftp-name option {
+	font-size: 13px;
+	font-weight: normal;
+}
+
+#trade-rightp-name {
+	font-size: 13px;
+	font-weight: bold;
+}
+
+#trade-rightp-name option {
+	font-size: 13px;
+	font-weight: normal;
+}
+
+#trade-leftp-money {
+	width: 90%;
+}
+
+#trade-rightp-money {
+	width: 90%;
+}
+
+#deedcolor {
+	background: white;
+	width: 100%;
+	height: 48px;
+}
+
+#deedname {
+	margin-top: 10px;
+	font-weight: bold;
+	font-size: 20px;
+	background-color: white;
+}
+
+#menu {
+	width: 100%;
+	height: 28px;
+	margin: 0;
+}
+
+#menutable {
+	padding: 0px;
+	text-align: left;
+	font-family: arial, sans-serif;
+	color: white;
+	font-weight: bold;
+	font-size: 13px;
+	border: 1px solid rgba(139,0,0,0.5);
+	border-radius: 4px 4px 0px 0px;
+	height: 26px;
+	width: 100%;
+	margin: 0px;
+	background: linear-gradient(to bottom, #a01010, #8B0000);
+	overflow: hidden;
+}
+
+#menutable td {
+	vertical-align: top;
+}
+
+#menu a {
+	color: #FFFFFF;
+	text-decoration: none;
+	display: block;
+	height: 100%;
+	width: 100%;
+	padding-top: 8px;
+}
+
+#buy-menu-item {
+	color: #FFFFFF;
+	margin-left: 2px;
+	border-left: none;
+}
+
+#trade-menu-item {
+	color: #AAAAAA;
+	border-right: none;
+	margin-right: 2px;
+}
+
+
+#popup {
+	width: 300px;
+	min-width: 300px;
+	font-family: Arial, sans-serif;
+	font-size: 14px;
+	padding: 10px;
+	text-align: center;
+	word-wrap: break-word;
+	line-height: 1.5;
+	border: 2px solid black;
+	border-radius: 10px;
+	background-color: white;
+	display: block;
+	z-index: 13;
+	margin: auto;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+#popupwrap {
+	position: absolute;
+	top: 255px;
+	left: 0px;
+	width: 100%;
+	display: none;
+	background-color: transparent;
+	z-index: 13;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+#popuptext {
+	overflow-x: auto;
+}
+
+/* #popupclose {
+	display: none;
+	position: absolute;
+	top: -24px;
+	right: -25px;
+	width: 30px;
+	height: 30px;
+	border: none;
+	cursor: pointer;
+	overflow: visible;
+	z-index: 12;
+} */
+
+#popupclose input {
+	margin: 0px;
+	background-color: red;
+	height: 18px;
+	width: 18px;
+	padding: 0px;
+}
+
+#popupbackground {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0px;
+	left: 0px;
+	background-color: #000000;
+	opacity: 0.5;
+	display: none;
+	z-index: 10;
+}
+
+#popupdrag {
+	width: 100%;
+	height: 16px;
+	position: absolute;
+	top: -16px;
+	cursor: move;
+}
+
+#stats {
+	max-width: 914px;
+	min-width: 454px;
+	font-family: Arial, sans-serif;
+	font-size: 14px;
+	padding: 10px;
+	text-align: center;
+	word-wrap: break-word;
+	line-height: 1.5;
+	border: 2px solid black;
+	border-radius: 10px;
+	background-color: white;
+	display: block;
+	z-index: 17;
+	margin: auto;
+	position: relative;
+	top: 0px;
+	left: 0px;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+#statswrap {
+	position: absolute;
+	top: 250px;
+	left: 0px;
+	width: 100%;
+	display: none;
+	background-color: transparent;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+#statstext {
+	overflow: hidden;
+	min-height: 70px;
+}
+
+#statsclose {
+	display: block;
+	position: absolute;
+	top: -24px;
+	right: -25px;
+	width: 30px;
+	height: 30px;
+	border: none;
+	cursor: pointer;
+	overflow: visible;
+	z-index: 17;
+}
+
+#statsbackground {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0px;
+	left: 0px;
+	background-color: #000000;
+	opacity: .5;
+	display: none;
+	z-index: 16;
+}
+
+#statsdrag {
+	width: 100%;
+	height: 16px;
+	position: absolute;
+	top: -16px;
+	cursor: move;
+}
+
+#deed {
+	display: none;
+	position: fixed;
+	width: 250px;
+	background-color: #FFFEF5;
+	border: 2px solid #2a6e3f;
+	border-radius: 8px;
+	box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+	z-index: 18;
+	-webkit-user-select: none;
+	user-select: none;
+	font-family: Georgia, "Times New Roman", serif;
+	overflow: hidden;
+}
+
+#deed td {
+	border: none;
+	font-family: Arial, sans-serif;
+	font-size: 12px;
+}
+
+/* --- Live status bar (owner, rent, buildings, group) --- */
+#deed-live {
+	padding: 6px 10px;
+	font-family: Arial, sans-serif;
+	font-size: 11px;
+	line-height: 1.5;
+	border-bottom: 1px solid #e0dcc8;
+	background: #f9f7ee;
+}
+.deed-live-owner { font-weight: bold; }
+.deed-live-rent { color: #006600; }
+.deed-live-buildings { color: #444; }
+.deed-live-group { color: #888; font-size: 10px; }
+
+/* --- Normal deed (color group properties) --- */
+#deed-header {
+	margin: 0;
+	padding: 6px 10px 4px;
+	background-color: yellow;
+	text-align: center;
+	text-transform: uppercase;
+	border-bottom: 1px solid rgba(0,0,0,0.15);
+}
+.deed-header-label {
+	font-size: 9px;
+	letter-spacing: 2px;
+	color: rgba(0,0,0,0.5);
+	margin-bottom: 2px;
+}
+#deed-name {
+	font-size: 16px;
+	font-weight: bold;
+	font-family: Georgia, "Times New Roman", serif;
+}
+
+#deed-table {
+	margin: 6px 10px;
+	width: 230px;
+	border-spacing: 0;
+}
+#deed-table td {
+	padding: 1px 0;
+}
+.deed-baserent-row {
+	font-weight: bold;
+	padding-bottom: 4px !important;
+	border-bottom: 1px solid #e0dcc8;
+}
+.deed-footer-cell {
+	border-top: 1px solid #e0dcc8;
+	padding-top: 4px !important;
+	font-size: 11px;
+	color: #555;
+}
+.deed-footer-cell div {
+	margin-bottom: 1px;
+}
+.deed-divider {
+	height: 0;
+	margin: 3px 0;
+}
+
+/* --- Mortgaged deed --- */
+#deed-mortgaged {
+	font-family: Georgia, "Times New Roman", serif;
+	text-align: center;
+	padding: 16px 12px;
+}
+#deed-mortgaged-name {
+	font-size: 18px;
+	font-weight: bold;
+	text-transform: uppercase;
+	margin-bottom: 12px;
+}
+.deed-mortgaged-badge {
+	display: inline-block;
+	background: #cc0000;
+	color: white;
+	font-size: 14px;
+	font-weight: bold;
+	padding: 4px 16px;
+	border-radius: 4px;
+	letter-spacing: 2px;
+	margin-bottom: 8px;
+}
+.deed-mortgaged-amount {
+	font-size: 14px;
+	color: #555;
+}
+
+/* --- Special deed (transit/utility) --- */
+#deed-special {
+	font-family: Arial, sans-serif;
+	text-align: justify;
+	padding: 8px 12px;
+}
+#deed-special-name {
+	text-align: center;
+	font-size: 16px;
+	font-weight: bold;
+	font-family: Georgia, "Times New Roman", serif;
+	text-transform: uppercase;
+	border-bottom: 2px solid #2a6e3f;
+	border-top: 2px solid #2a6e3f;
+	padding: 6px 0;
+	margin: 8px 0 10px;
+}
+#deed-special-text {
+	font-size: 13px;
+	line-height: 1.5;
+}
+#deed-special-footer {
+	margin-top: 10px;
+	padding-top: 6px;
+	border-top: 1px solid #e0dcc8;
+	font-size: 13px;
+}
+
+#enlarge-wrap {
+	border: none;
+	z-index: 0;
+}
+
+.menu-item:hover {
+	background: linear-gradient(to bottom, #c01515, #a01010);
+}
+
+.menu-item {
+	padding: 0px;
+	border-collapse: collapse;
+	text-align: center;
+	display: table-cell;
+	background-color: transparent;
+	border: none;
+	border-right: 1px solid rgba(255,255,255,0.3);
+	height: 26px;
+	min-width: 60px;
+	overflow: hidden;
+}
+.menu-item a {
+	font-size: 12px;
+	padding-top: 5px;
+}
+
+.die {
+	display: none;
+	margin: 3px;
+}
+
+.die-no-img {
+	border-radius: 6px;
+	font-weight: bold;
+	border: 1px solid rgba(255,255,255,0.3);
+	padding: 4px 8px;
+	color: #FFFEF5;
+	background: rgba(0,0,0,0.2);
+	font-size: 16px;
+	text-align: center;
+}
+.house {
+	width: 25px;
+	height: 19px;
+	vertical-align: middle;
+	float: right;
+}
+
+.hotel {
+	width: 26px;
+	height: 19px;
+	vertical-align: middle;
+	float: right;
+}
+
+.cell {
+	position: relative;
+	top: 0px;
+	left: 0px;
+	padding: 0px;
+	vertical-align: bottom;
+	background-repeat: no-repeat;
+	background-size: auto 40px;
+	background-color: #FFFEF5;
+	border: 1px solid #2a6e3f;
+	transition: filter 0.15s ease;
+}
+.cell:hover {
+	filter: brightness(1.04);
+}
+
+.board-center {
+	width: 675px;
+	border: none;
+	vertical-align: bottom;
+	background-repeat: no-repeat;
+	background-size: auto 40px;
+	background-color: #1a5c2e;
+	padding: 0;
+}
+
+/* ========================================================
+   Board Center Overlay — unified hub
+   ======================================================== */
+#board-center-overlay {
+	display: none;
+	position: absolute;
+	z-index: 7;
+	pointer-events: auto;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+/* --- Center Header: compact logo + debt meter --- */
+#center-header {
+	background: rgba(0,0,0,0.3);
+	padding: 6px 12px 4px;
+	text-align: center;
+	border-bottom: 1px solid rgba(218,165,32,0.25);
+	flex-shrink: 0;
+}
+#center-logo {
+	font-family: Georgia, "Times New Roman", serif;
+	margin-bottom: 2px;
+}
+.center-logo-main {
+	font-size: 22px;
+	font-weight: bold;
+	color: #FFFEF5;
+	letter-spacing: 4px;
+	text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+.center-logo-accent {
+	font-size: 16px;
+	font-weight: bold;
+	color: #DAA520;
+	letter-spacing: 6px;
+	text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+#center-header-row {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	margin-top: 2px;
+}
+#center-header-row .lang-toggle-btn {
+	cursor: pointer;
+	padding: 2px 8px;
+	font-weight: bold;
+	font-size: 11px;
+	border: 1px solid rgba(255,255,255,0.3);
+	border-radius: 3px;
+	background: rgba(255,255,255,0.1);
+	color: #e8d8a8;
+	letter-spacing: 1px;
+}
+#center-header #debt-meter {
+	width: 140px;
+}
+#center-header .debt-meter-bar-wrap {
+	height: 8px;
+}
+#center-header .debt-meter-value {
+	font-size: 10px;
+}
+
+/* --- Center Content: dynamic panel area --- */
+#center-content {
+	flex: 1;
+	overflow: hidden;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+}
+.center-panel {
+	width: 100%;
+	flex: 1;
+	overflow-y: auto;
+	box-sizing: border-box;
+}
+
+/* --- Game controls panel (default view) --- */
+#center-game {
+	display: flex;
+	flex-direction: column;
+}
+#center-game-top {
+	display: flex;
+	flex: 1;
+	overflow: hidden;
+	min-height: 0;
+}
+#center-game-left {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	min-width: 0;
+}
+#center-game-right {
+	width: 110px;
+	padding: 6px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	flex-shrink: 0;
+	border-left: 1px solid rgba(255,255,255,0.08);
+}
+#center-game-buttons {
+	padding: 8px;
+	text-align: center;
+	flex-shrink: 0;
+	border-top: 1px solid rgba(255,255,255,0.1);
+}
+#center-game-buttons input {
+	padding: 6px 16px;
+	font-size: 13px;
+	cursor: pointer;
+	margin: 0 4px;
+}
+#center-dice {
+	display: flex;
+	gap: 6px;
+	margin-top: 8px;
+}
+
+/* --- Message panel (events, card draws, auction) --- */
+#center-msg {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 20px;
+	color: #FFFEF5;
+	text-align: center;
+	font-size: 14px;
+	line-height: 1.6;
+}
+#center-msg h3 {
+	font-family: Georgia, "Times New Roman", serif;
+	color: #DAA520;
+	font-size: 18px;
+	margin: 0 0 8px 0;
+}
+#center-msg p {
+	margin: 3px 0;
+}
+
+/* --- Help button in header --- */
+.help-btn {
+	cursor: pointer;
+	width: 22px;
+	height: 22px;
+	border-radius: 50%;
+	border: 1px solid rgba(218,165,32,0.5);
+	background: rgba(218,165,32,0.15);
+	color: #DAA520;
+	font-size: 13px;
+	font-weight: bold;
+	line-height: 20px;
+	text-align: center;
+	padding: 0;
+}
+.help-btn:hover {
+	background: rgba(218,165,32,0.3);
+}
+
+/* --- Help panel --- */
+#center-help {
+	padding: 0;
+	overflow: hidden;
+}
+.help-scroll {
+	height: 100%;
+	overflow-y: auto;
+	padding: 12px 16px 20px;
+	color: #e0e0d0;
+	font-family: Arial, sans-serif;
+	font-size: 13px;
+	line-height: 1.6;
+}
+.help-back {
+	margin-bottom: 8px;
+}
+.help-back button {
+	cursor: pointer;
+	padding: 3px 12px;
+	font-size: 11px;
+	border: 1px solid rgba(255,255,255,0.2);
+	border-radius: 4px;
+	background: rgba(255,255,255,0.08);
+	color: #e0e0d0;
+}
+.help-back button:hover {
+	background: rgba(255,255,255,0.15);
+}
+.help-title {
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: 20px;
+	color: #DAA520;
+	margin: 0 0 6px 0;
+	text-align: center;
+}
+.help-intro {
+	text-align: center;
+	color: #aaa;
+	font-size: 12px;
+	margin-bottom: 14px;
+	font-style: italic;
+}
+.help-section {
+	margin-bottom: 12px;
+	padding: 8px 10px;
+	background: rgba(0,0,0,0.2);
+	border-radius: 6px;
+	border-left: 3px solid rgba(218,165,32,0.4);
+}
+.help-section h3 {
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: 14px;
+	color: #DAA520;
+	margin: 0 0 4px 0;
+}
+.help-section p {
+	margin: 0;
+	font-size: 12px;
+	color: #ccc;
+}
+
+/* --- Auction bar: floats at bottom of center overlay --- */
+#auction-bar {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 8;
+	background: rgba(10,30,16,0.95);
+	border-top: 1px solid rgba(218,165,32,0.35);
+	padding: 10px 16px;
+	text-align: center;
+	color: #FFFEF5;
+	font-size: 13px;
+	line-height: 1.5;
+	backdrop-filter: blur(3px);
+}
+
+/* --- Trade panel --- */
+#center-trade {
+	padding: 10px;
+	overflow-y: auto;
+	color: #e0e0d0;
+}
+#center-trade table {
+	width: 100%;
+}
+#center-trade input[type="button"] {
+	margin: 2px;
+	padding: 4px 10px;
+	cursor: pointer;
+}
+#center-trade input[type="text"],
+#center-trade input:not([type]) {
+	background: rgba(0,0,0,0.25);
+	color: #FFFEF5;
+	border: 1px solid rgba(255,255,255,0.2);
+	border-radius: 3px;
+	padding: 3px 6px;
+}
+
+/* ========================================================
+   Tycoon Saigon — theme accents
+   Palette: deep red #8B0000, gold #DAA520, cream #FFF8DC
+   ======================================================== */
+#gameLogo {
+	text-align: center;
+	font-family: Georgia, "Times New Roman", serif;
+	color: #FFFEF5;
+	padding: 12px 0 4px 0;
+	text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+#gameLogo .logo-main {
+	font-size: 42px;
+	font-weight: bold;
+	letter-spacing: 6px;
+}
+#gameLogo .logo-accent {
+	font-size: 28px;
+	font-weight: bold;
+	color: #DAA520;
+	letter-spacing: 10px;
+	margin-top: -4px;
+	text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+#gameLogo .logo-sub {
+	font-size: 13px;
+	color: #e8d8a8;
+	font-style: italic;
+	letter-spacing: 2px;
+	margin-top: 2px;
+}
+
+/* Player mortgage-debt dashboard (under cash in quickstats) */
+.debt-display {
+	font-size: 12px;
+	color: #8B0000;
+	margin-top: 4px;
+	padding: 2px 4px;
+	border-top: 1px solid #DAA520;
+}
+
+/* Prominent popup shown when mortgage interest is deducted at GO */
+.interest-alert {
+	text-align: center;
+	padding: 6px 4px;
+}
+.interest-alert h3 {
+	margin: 0 0 8px 0;
+	color: #DAA520;
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: 18px;
+	border-bottom: 2px solid #DAA520;
+	padding-bottom: 4px;
+}
+.interest-alert p {
+	margin: 4px 0;
+	font-size: 14px;
+	color: #e0e0d0;
+}
+
+.board-corner {
+	width: 102px;
+	height: 102px;
+}
+
+.board-top {
+	width: 72px;
+	height: 102px;
+}
+
+.board-bottom {
+	width: 72px;
+	height: 102px;
+}
+
+.board-left {
+	width: 102px;
+	height: 72px;
+}
+
+.board-right {
+	width: 102px;
+	height: 72px;
+}
+
+.enlarge {
+	width: 190px;
+	min-height: 160px;
+	display: none;
+	background-color: white;
+	border: 2px solid #333;
+	border-radius: 6px;
+	text-align: center;
+	font-size: 12px;
+	font-family: arial, sans-serif;
+	position: fixed;
+	z-index: 15;
+	box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+	overflow: hidden;
+}
+
+.enlarge-color {
+	background: white;
+	width: 100%;
+	height: 32px;
+}
+
+.enlarge-name {
+	font-weight: bold;
+	font-size: 16px;
+	background-color: white;
+	padding: 4px 6px 2px;
+	font-family: Georgia, "Times New Roman", serif;
+}
+
+.enlarge-price {
+	background-color: white;
+	font-size: 12px;
+	color: #555;
+	padding: 0 6px;
+}
+
+.enlarge-details {
+	padding: 4px 8px 6px;
+	font-size: 11px;
+	text-align: left;
+	line-height: 1.5;
+	background-color: white;
+}
+.enlarge-detail-owner {
+	font-weight: bold;
+}
+.enlarge-detail-rent {
+	color: #006600;
+}
+.enlarge-detail-mortgage {
+	color: #cc0000;
+	font-weight: bold;
+}
+.enlarge-detail-group {
+	color: #888;
+	font-size: 10px;
+}
+.enlarge-detail-buildings {
+	color: #444;
+}
+
+.enlarge-token {
+	height: 30px;
+	width: 190px;
+}
+
+.moneybarcell {
+	width: 160px;
+	min-width: 160px;
+	padding: 4px 6px;
+	font-size: 11px;
+	line-height: 1.4;
+}
+
+/* Player card badges */
+.card-badge {
+	display: inline-block;
+	font-size: 9px;
+	font-weight: bold;
+	padding: 1px 5px;
+	border-radius: 3px;
+	margin-right: 3px;
+	letter-spacing: 0.5px;
+	vertical-align: middle;
+}
+.card-badge-snipe {
+	background: #DAA520;
+	color: #fff;
+	text-shadow: 0 1px 0 rgba(0,0,0,0.3);
+}
+.card-badge-jail {
+	background: #666;
+	color: #fff;
+}
+.card-badge-credit-warn {
+	background: #e67e00;
+	color: #fff;
+}
+.card-badge-credit-danger {
+	background: #cc0000;
+	color: #fff;
+	animation: credit-pulse 1.5s ease-in-out infinite;
+}
+@keyframes credit-pulse {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0.7; }
+}
+.card-badge-props {
+	color: #555;
+	font-weight: normal;
+	font-size: 9px;
+}
+
+/* Help tooltip on player cards */
+.card-help {
+	display: inline-block;
+	position: relative;
+	cursor: help;
+	font-size: 9px;
+	font-weight: bold;
+	color: #888;
+	background: rgba(0,0,0,0.08);
+	border: 1px solid #bbb;
+	border-radius: 50%;
+	width: 13px;
+	height: 13px;
+	line-height: 13px;
+	text-align: center;
+	margin-left: 3px;
+	vertical-align: middle;
+}
+.card-help:hover {
+	color: #333;
+	border-color: #888;
+	background: rgba(0,0,0,0.12);
+}
+.card-help-tip {
+	display: none;
+	position: absolute;
+	bottom: 100%;
+	right: -10px;
+	width: 200px;
+	padding: 8px 10px;
+	background: #1a1a2e;
+	color: #e0e0d0;
+	font-size: 11px;
+	font-weight: normal;
+	line-height: 1.5;
+	border-radius: 6px;
+	box-shadow: 0 3px 12px rgba(0,0,0,0.4);
+	z-index: 20;
+	margin-bottom: 6px;
+	text-align: left;
+	pointer-events: none;
+}
+.card-help-tip::after {
+	content: '';
+	position: absolute;
+	top: 100%;
+	right: 14px;
+	border: 6px solid transparent;
+	border-top-color: #1a1a2e;
+}
+.card-help:hover .card-help-tip {
+	display: block;
+}
+.card-row {
+	margin-top: 2px;
+}
+
+.moneybararrowcell {
+	background: white;
+	width: 30px;
+	border: none;
+	text-align: right;
+	padding: 0px;
+}
+
+.money-bar-arrow {
+	height: 30px;
+	width: 30px;
+}
+.propertycellcheckbox {
+	width: 20px;
+	height: 20px;
+	border: none;
+	vertical-align: middle;
+}
+
+.propertycellcolor {
+	padding: 0px;
+	width: 20px;
+	height: 20px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: white;
+}
+
+.propertycellname {
+	height: 20px;
+	width: 250px;
+	border: none;
+	cursor: default;
+	text-align: left;
+	vertical-align: middle;
+}
+
+.propertycelldeed {
+	width: 18px;
+	height: 20px;
+	border: 1px solid grey;
+	cursor: pointer;
+	display: none;
+}
+
+.statscellcolor {
+	padding: 0px;
+	width: 22px;
+	height: 20px;
+	border: none;
+}
+
+.statscellname {
+	height: 20px;
+	border: none;
+	cursor: default;
+	text-align: left;
+	min-width: 172px;
+}
+
+.statsplayername {
+	font-weight: bold;
+	font-size: 24px;
+}
+
+.statscell {
+	border: 2px solid black;
+	padding: 8px;
+	vertical-align: top;
+	width: 202px;
+	min-width: 115px;
+}
+
+.trade-cell {
+	border: none;
+	border-radius: 3px;
+	width: 48%;
+	height: 26px;
+	vertical-align: middle;
+	color: #e0e0d0;
+	font-size: 12px;
+}
+
+.cell-anchor {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	bottom: 0px;
+	left: 0px;
+}
+
+.cell-name {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	text-align: center;
+	width: 100%;
+	font-family: Georgia, "Times New Roman", serif;
+	font-weight: 600;
+	font-size: 11px;
+}
+
+.cell-position-holder {
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	position: relative;
+}
+
+.cell-position {
+	height: 20px;
+	width: 20px;
+	border-radius: 50%;
+	border: 2px solid rgba(255,255,255,0.85);
+	box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 3;
+	font-size: 0;
+	font-weight: bold;
+	color: white;
+	text-align: center;
+	line-height: 20px;
+	text-shadow: 0 1px 1px rgba(0,0,0,0.6);
+	transition: box-shadow 0.2s ease;
+}
+.cell-position::after {
+	content: attr(data-pnum);
+	font-size: 10px;
+	font-family: Arial, sans-serif;
+}
+.cell-position.active-token {
+	box-shadow: 0 0 7px 2px rgba(255,255,255,0.7), 0 1px 3px rgba(0,0,0,0.5);
+	z-index: 4;
+	border-color: #fff;
+}
+
+.cell-owner {
+	background-size: cover;
+	display: none;
+	position: absolute;
+}
+
+.board-top .cell-owner {
+	height: 6px;
+	left: 0px;
+	top: -1px;
+	width: 72px;
+	border-bottom: 1px solid rgba(0,0,0,0.3);
+}
+
+.board-bottom .cell-owner {
+	height: 6px;
+	bottom: -1px;
+	left: 0px;
+	width: 72px;
+	border-top: 1px solid rgba(0,0,0,0.3);
+}
+
+.board-left .cell-owner {
+	height: 68px;
+	left: -1px;
+	top: 0px;
+	width: 6px;
+	border-right: 1px solid rgba(0,0,0,0.3);
+}
+
+.board-right .cell-owner {
+	height: 68px;
+	right: -1px;
+	top: 0px;
+	width: 6px;
+	border-left: 1px solid rgba(0,0,0,0.3);
+}
+
+/* ========================================================
+   Tycoon Saigon — Enhanced Property Tile Visuals
+   Shows buildings, owner, mortgage status, and rent on board
+   ======================================================== */
+
+/* --- Buildings row: houses/hotel shown on the color-band edge --- */
+.cell-buildings {
+	position: absolute;
+	z-index: 2;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 1px;
+	pointer-events: none;
+}
+.board-top .cell-buildings {
+	top: 0px;
+	left: 0px;
+	width: 72px;
+	height: 16px;
+}
+.board-bottom .cell-buildings {
+	bottom: 0px;
+	left: 0px;
+	width: 72px;
+	height: 16px;
+}
+.board-left .cell-buildings {
+	top: 0px;
+	left: 0px;
+	width: 16px;
+	height: 68px;
+	flex-direction: column;
+}
+.board-right .cell-buildings {
+	top: 0px;
+	right: 0px;
+	width: 16px;
+	height: 68px;
+	flex-direction: column;
+}
+
+.cell-building-icon {
+	width: 12px;
+	height: 12px;
+	border-radius: 1px;
+}
+.cell-building-house {
+	background: #2e7d32;
+	border: 1px solid #1b5e20;
+}
+.cell-building-hotel {
+	background: #c62828;
+	border: 1px solid #b71c1c;
+	width: 14px;
+	height: 14px;
+	border-radius: 2px;
+}
+
+/* --- Rent display: small text overlaid on the cell --- */
+.cell-rent {
+	position: absolute;
+	z-index: 2;
+	font-size: 9px;
+	font-weight: bold;
+	color: #333;
+	background: rgba(255,255,255,0.75);
+	padding: 0px 2px;
+	border-radius: 2px;
+	pointer-events: none;
+	white-space: nowrap;
+	display: none;
+}
+.board-top .cell-rent {
+	bottom: 16px;
+	left: 50%;
+	transform: translateX(-50%);
+}
+.board-bottom .cell-rent {
+	top: 16px;
+	left: 50%;
+	transform: translateX(-50%);
+}
+.board-left .cell-rent {
+	top: 50%;
+	right: 4px;
+	transform: translateY(-50%);
+}
+.board-right .cell-rent {
+	top: 50%;
+	left: 4px;
+	transform: translateY(-50%);
+}
+
+/* --- Mortgage overlay: dims the cell and shows MORTGAGED text --- */
+.cell-mortgage-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 3;
+	background: rgba(0,0,0,0.45);
+	display: none;
+	pointer-events: none;
+}
+.cell-mortgage-label {
+	position: absolute;
+	font-size: 8px;
+	font-weight: bold;
+	color: #ff6666;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	text-shadow: 0 0 2px #000;
+	pointer-events: none;
+}
+.board-top .cell-mortgage-label,
+.board-bottom .cell-mortgage-label {
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+.board-left .cell-mortgage-label,
+.board-right .cell-mortgage-label {
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+/* --- Enhanced owner bar: z-index above other elements --- */
+.cell-owner {
+	z-index: 2;
+}
+
+/* --- Financial Crisis banner --- */
+#crisis-banner {
+	background: linear-gradient(90deg, #8b0000, #cc0000, #8b0000);
+	color: #fff;
+	text-align: center;
+	font-family: arial, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	letter-spacing: 1px;
+	padding: 6px 10px;
+	animation: crisis-pulse 1.5s ease-in-out infinite;
+	border-bottom: 2px solid #ff4444;
+	text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+#crisis-banner .crisis-rate {
+	color: #ffcc00;
+	font-size: 16px;
+}
+@keyframes crisis-pulse {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0.75; }
+}
+
+/* ========================================================
+   Macro Debt Meter — shown in board center below logo
+   ======================================================== */
+#debt-meter {
+	width: 240px;
+	margin: 12px auto 0;
+	text-align: center;
+	font-family: Georgia, "Times New Roman", serif;
+}
+.debt-meter-label {
+	font-size: 11px;
+	color: #c0c0a0;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	margin-bottom: 4px;
+}
+.debt-meter-bar-wrap {
+	width: 100%;
+	height: 12px;
+	background: rgba(0,0,0,0.35);
+	border-radius: 6px;
+	overflow: hidden;
+	border: 1px solid rgba(255,255,255,0.15);
+}
+.debt-meter-bar {
+	height: 100%;
+	width: 0%;
+	border-radius: 6px;
+	background: linear-gradient(90deg, #2e7d32, #DAA520);
+	transition: width 0.6s ease, background 0.6s ease;
+}
+.debt-meter-bar.warning {
+	background: linear-gradient(90deg, #DAA520, #e65100);
+}
+.debt-meter-bar.danger {
+	background: linear-gradient(90deg, #e65100, #c62828);
+}
+.debt-meter-bar.crisis {
+	background: linear-gradient(90deg, #c62828, #ff1744);
+	animation: crisis-pulse 1.2s ease-in-out infinite;
+}
+.debt-meter-value {
+	font-size: 12px;
+	color: #e8d8a8;
+	margin-top: 3px;
+}
+
+/* ========================================================
+   Corner square accents
+   ======================================================== */
+#cell0 {
+	background: linear-gradient(135deg, #FFFEF5 60%, #f5e6b8);
+	border-left: 3px solid #DAA520;
+}
+#cell10 {
+	background-color: #e8edf2;
+}
+#cell20 {
+	background: linear-gradient(135deg, #e8f5e9, #FFFEF5);
+}
+#cell30 {
+	background: linear-gradient(135deg, #FFFEF5, #fde8e8);
+}
+
+/* Jail box inside cell10 */
+#jail {
+	border: 1px solid #666;
+	height: 65px;
+	width: 65px;
+	position: relative;
+	top: 73px;
+	left: -73px;
+	z-index: 2;
+	background-color: #f0f0f0;
+}
+
+/* ========================================================
+   Greeting / Splash Screen
+   ======================================================== */
+#greeting {
+	display: none;
+	min-height: 100vh;
+	background: linear-gradient(160deg, #0d3318 0%, #1a5c2e 40%, #145228 100%);
+	color: #FFFEF5;
+	font-family: Arial, sans-serif;
+	padding: 40px 20px 60px;
+	box-sizing: border-box;
+	position: relative;
+}
+
+.greet-lang-toggle {
+	position: absolute;
+	top: 16px;
+	right: 24px;
+}
+.greet-lang-toggle .lang-toggle-btn {
+	cursor: pointer;
+	padding: 5px 14px;
+	font-weight: bold;
+	border: 1px solid rgba(255,255,255,0.3);
+	border-radius: 4px;
+	background: rgba(255,255,255,0.1);
+	color: #e8d8a8;
+	font-size: 13px;
+	letter-spacing: 1px;
+}
+.greet-lang-toggle .lang-toggle-btn:hover {
+	background: rgba(255,255,255,0.2);
+}
+
+.greet-hero {
+	text-align: center;
+	margin-bottom: 24px;
+}
+.greet-logo-main {
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: 64px;
+	font-weight: bold;
+	letter-spacing: 10px;
+	color: #FFFEF5;
+	text-shadow: 2px 3px 6px rgba(0,0,0,0.5);
+}
+.greet-logo-accent {
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: 40px;
+	font-weight: bold;
+	color: #DAA520;
+	letter-spacing: 14px;
+	margin-top: -6px;
+	text-shadow: 1px 2px 4px rgba(0,0,0,0.5);
+}
+.greet-tagline {
+	font-size: 16px;
+	color: #c0c0a0;
+	font-style: italic;
+	letter-spacing: 2px;
+	margin-top: 8px;
+}
+
+.greet-overview {
+	max-width: 720px;
+	margin: 0 auto 32px;
+	text-align: center;
+	font-size: 15px;
+	line-height: 1.7;
+	color: #d4d4c0;
+}
+
+.greet-section-title {
+	text-align: center;
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: 24px;
+	color: #DAA520;
+	letter-spacing: 3px;
+	margin-bottom: 24px;
+	text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+}
+
+.greet-cards {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 16px;
+	max-width: 880px;
+	margin: 0 auto 36px;
+}
+.greet-card {
+	flex: 0 1 260px;
+	background: rgba(255,255,255,0.07);
+	border: 1px solid rgba(218,165,32,0.25);
+	border-radius: 8px;
+	padding: 18px 16px;
+	transition: background 0.2s ease, border-color 0.2s ease;
+}
+.greet-card:hover {
+	background: rgba(255,255,255,0.12);
+	border-color: rgba(218,165,32,0.5);
+}
+
+.greet-card-title {
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: 16px;
+	font-weight: bold;
+	color: #DAA520;
+	margin-bottom: 8px;
+}
+
+.greet-card-desc {
+	font-size: 13px;
+	line-height: 1.6;
+	color: #c8c8b4;
+}
+
+.greet-play-wrap {
+	text-align: center;
+}
+
+.greet-play-btn {
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: 22px;
+	font-weight: bold;
+	letter-spacing: 3px;
+	color: #FFFEF5;
+	background: linear-gradient(to bottom, #a01010, #8B0000);
+	border: 2px solid #6b1010;
+	border-radius: 8px;
+	padding: 14px 48px;
+	cursor: pointer;
+	box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+	transition: background 0.2s ease, transform 0.1s ease;
+}
+.greet-play-btn:hover {
+	background: linear-gradient(to bottom, #c01515, #a01010);
+	transform: translateY(-1px);
+	box-shadow: 0 5px 16px rgba(0,0,0,0.4);
+}
+.greet-play-btn:active {
+	transform: translateY(0);
+	box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+/* ========================================================
+   Board Center Message Panel (non-blocking)
+   ======================================================== */
+/* #board-msg is now #center-msg inside the center overlay */
+@keyframes boardMsgFadeIn {
+	from { opacity: 0; transform: translateY(-6px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+#board-msg-text {
+	word-wrap: break-word;
+}
+#board-msg-text h3 {
+	margin: 0 0 6px 0;
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: 16px;
+	color: #DAA520;
+	border-bottom: 1px solid rgba(218,165,32,0.3);
+	padding-bottom: 4px;
+}
+#board-msg-text p {
+	margin: 3px 0;
+}
+#board-msg-btn {
+	margin-top: 8px;
+}
+#board-msg-ok {
+	cursor: pointer;
+	padding: 4px 24px;
+	font-size: 12px;
+	font-weight: bold;
+	border: 1px solid rgba(255,255,255,0.3);
+	border-radius: 4px;
+	background: rgba(255,255,255,0.12);
+	color: #e8d8a8;
+	letter-spacing: 1px;
+	transition: background 0.15s;
+}
+#board-msg-ok:hover {
+	background: rgba(255,255,255,0.25);
+}
+
+@media (max-width: 700px) {
+	.greet-cards {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	.greet-logo-main { font-size: 44px; }
+	.greet-logo-accent { font-size: 28px; }
+}

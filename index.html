@@ -1,0 +1,771 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Tycoon Saigon</title>
+	<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+	<meta name="description" content="Tycoon Saigon — a property trading board game with HCMC districts and realistic mortgage interest." />
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script type="text/javascript" src="lang.js"></script>
+	<!-- Tycoon Saigon — Saigon Edition. Swap for classicedition.js or newyorkcityedition.js to play other boards. -->
+	<script type="text/javascript" src="saigonedition.js"></script>
+	<script type="text/javascript" src="ai.js"></script>
+	<!-- Optional, gitignored. Pre-sets CLAUDE_API_KEY for local dev; setup-screen input still wins if filled. Safe to 404. -->
+	<script type="text/javascript" src="apikey.local.js"></script>
+	<script type="text/javascript" src="monopoly.js"></script>
+	<link rel="stylesheet" type="text/css" href="styles.css" />
+</head>
+
+<body>
+	<div id="popupbackground"></div>
+	<div id="popupwrap">
+		<div id="popup">
+			<div style="position: relative;">
+				<!-- <img id="popupclose" src="Images/close.png" title="Close" alt="x" onclick="hide('popupbackground'); hide('popupwrap');" /> -->
+				<div id="popuptext"></div>
+				<div id="popupdrag"></div>
+			</div>
+		</div>
+	</div>
+
+	<div id="statsbackground"></div>
+	<div id="statswrap">
+		<div id="stats">
+			<div style="position: relative;">
+				<img id="statsclose" src="images/close.png" title="Close" alt="x" />
+				<div id="statstext"></div>
+				<div id="statsdrag"></div>
+			</div>
+		</div>
+	</div>
+
+	<p id="noscript" data-i18n="lbl_no_js">
+		Lưu ý: Trang này cần JavaScript để hoạt động.
+	</p>
+
+	<div id="refresh" data-i18n="lbl_refresh">
+		Tải lại trang để bắt đầu ván mới.
+	</div>
+
+	<!-- <div id="enlarge"></div> -->
+
+	<div id="deed">
+		<!-- Live status bar (shown on all deed types) -->
+		<div id="deed-live" style="display:none;">
+			<div id="deed-live-owner" class="deed-live-owner"></div>
+			<div id="deed-live-rent" class="deed-live-rent"></div>
+			<div id="deed-live-buildings" class="deed-live-buildings"></div>
+			<div id="deed-live-group" class="deed-live-group"></div>
+		</div>
+
+		<div id="deed-normal" style="display: none;">
+			<div id="deed-header">
+				<div class="deed-header-label" data-i18n="lbl_title_deed">B Ả N G &nbsp;&nbsp; G I Á</div>
+				<div id="deed-name"></div>
+			</div>
+			<table id="deed-table">
+				<tr>
+					<td colspan="2" class="deed-baserent-row">
+						<span data-i18n="lbl_rent">TIỀN THUÊ</span>&nbsp;$<span id="deed-baserent">12</span>.
+					</td>
+				</tr>
+				<tr>
+					<td style="text-align: left;" data-i18n="lbl_with_1_house">Với 1 Nhà</td>
+					<td style="text-align: right;">$&nbsp;&nbsp;&nbsp;<span id="deed-rent1">60</span>.</td>
+				</tr>
+				<tr>
+					<td style="text-align: left;" data-i18n="lbl_with_2_houses">Với 2 Nhà</td>
+					<td style="text-align: right;"><span id="deed-rent2">180</span>.</td>
+				</tr>
+				<tr>
+					<td style="text-align: left;" data-i18n="lbl_with_3_houses">Với 3 Nhà</td>
+					<td style="text-align: right;"><span id="deed-rent3">500</span>.</td>
+				</tr>
+				<tr>
+					<td style="text-align: left;" data-i18n="lbl_with_4_houses">Với 4 Nhà</td>
+					<td style="text-align: right;"><span id="deed-rent4">700</span>.</td>
+				</tr>
+				<tr>
+					<td colspan="2" class="deed-footer-cell">
+						<div><span data-i18n="lbl_with_hotel">Với KHÁCH SẠN $</span><span id="deed-rent5">900</span>.</div>
+						<div class="deed-divider"></div>
+						<div><span data-i18n="lbl_mortgage_value">Giá thế chấp $</span><span id="deed-mortgage">80</span>.</div>
+						<div><span data-i18n="lbl_houses_cost">Nhà giá $</span><span id="deed-houseprice">100</span><span data-i18n="lbl_houses_each">. mỗi căn</span></div>
+						<div><span data-i18n="lbl_hotels_cost">Khách sạn, $</span><span id="deed-hotelprice">100</span><span data-i18n="lbl_hotels_plus">. cộng 4 nhà</span></div>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<div id="deed-mortgaged">
+			<div id="deed-mortgaged-name"></div>
+			<div class="deed-mortgaged-badge" data-i18n="lbl_mortgaged">THẾ CHẤP</div>
+			<div class="deed-mortgaged-amount"><span data-i18n="lbl_mortgaged_for">với giá $</span><span id="deed-mortgaged-mortgage">80</span></div>
+		</div>
+
+		<div id="deed-special">
+			<div id="deed-special-name"></div>
+			<div id="deed-special-text"></div>
+			<div id="deed-special-footer">
+				<span data-i18n="lbl_mortgage_value">Giá thế chấp $</span>
+				<span style="float: right;">$<span id="deed-special-mortgage">100</span>.</span>
+			</div>
+		</div>
+	</div>
+
+	<div id="crisis-banner" style="display:none;"></div>
+	<div id="board-center-overlay">
+		<!-- Header: compact logo + controls -->
+		<div id="center-header">
+			<div id="center-logo">
+				<span class="center-logo-main">TYCOON</span> <span class="center-logo-accent">SAIGON</span>
+			</div>
+			<div id="center-header-row">
+				<button class="lang-toggle-btn" onclick="toggleLang();" data-i18n="lang_toggle">EN</button>
+				<div id="debt-meter" style="display:none;">
+					<div class="debt-meter-bar-wrap"><div class="debt-meter-bar" id="debt-meter-fill"></div></div>
+					<div class="debt-meter-value">$<span id="debt-meter-amount">0</span> / $<span id="debt-meter-threshold">1000</span></div>
+				</div>
+				<button class="help-btn" onclick="showCenterPanel('center-help');">?</button>
+			</div>
+		</div>
+
+		<!-- Dynamic content area -->
+		<div id="center-content">
+			<!-- Default: game controls (alert log, dice, buttons) -->
+			<div id="center-game" class="center-panel">
+				<div id="center-game-top">
+					<div id="center-game-left">
+						<div id="menu">
+							<table id="menutable" cellspacing="0">
+								<tr>
+									<td class="menu-item" id="buy-menu-item">
+										<a href="javascript:void(0);" data-i18n="btn_buy">Mua</a>
+									</td>
+									<td class="menu-item" id="manage-menu-item">
+										<a href="javascript:void(0);" data-i18n="btn_manage">Quản Lý</a>
+									</td>
+									<td class="menu-item" id="trade-menu-item">
+										<a href="javascript:void(0);" data-i18n="btn_trade">Giao Dịch</a>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div id="buy">
+							<div id="alert"></div>
+							<div id="landed"></div>
+						</div>
+						<div id="manage">
+							<div id="option">
+								<div id="buildings" title="Available buildings"></div>
+								<input type="button" value="Mua nhà" id="buyhousebutton" data-i18n="btn_buy_house" data-i18n-attr="value"/>
+								<input type="button" value="Thế chấp" id="mortgagebutton" data-i18n="btn_mortgage" data-i18n-attr="value"/>
+								<input type="button" value="Bán nhà" id="sellhousebutton" data-i18n="btn_sell_house" data-i18n-attr="value"/>
+							</div>
+							<div id="owned"></div>
+						</div>
+					</div>
+					<div id="center-game-right">
+						<div id="quickstats">
+							<div><span id="pname">Player 1</span>:</div>
+							<div><span id="pmoney">$1500</span></div>
+							<div id="pdebt" class="debt-display">Debt: $0</div>
+						</div>
+						<div id="center-dice">
+							<div id="die0" title="Die" class="die die-no-img"></div>
+							<div id="die1" title="Die" class="die die-no-img"></div>
+						</div>
+					</div>
+				</div>
+				<div id="center-game-buttons">
+					<input type="button" id="nextbutton" value="Gieo Xúc Xắc" data-i18n="btn_roll" data-i18n-attr="value"/>
+					<input type="button" id="resignbutton" value="Bỏ Cuộc" data-i18n="btn_resign" data-i18n-attr="value" onclick="game.resign();" />
+				</div>
+			</div>
+
+			<!-- Board message overlay (card draws, events, auction) -->
+			<div id="center-msg" class="center-panel" style="display:none;">
+				<div id="board-msg-text"></div>
+				<div id="board-msg-btn" style="display:none;"><button id="board-msg-ok" onclick="dismissBoardMsg();">OK</button></div>
+			</div>
+
+			<!-- Trade UI -->
+			<div id="center-trade" class="center-panel" style="display:none;">
+				<table style="border-spacing: 3px; width: 100%;">
+					<tr>
+						<td class="trade-cell"><div id="trade-leftp-name"></div></td>
+						<td class="trade-cell"><div id="trade-rightp-name"></div></td>
+					</tr>
+					<tr>
+						<td class="trade-cell">$&nbsp;<input id="trade-leftp-money" value="0" /></td>
+						<td class="trade-cell">$&nbsp;<input id="trade-rightp-money" value="0" /></td>
+					</tr>
+					<tr>
+						<td id="trade-leftp-property" class="trade-cell"></td>
+						<td id="trade-rightp-property" class="trade-cell"></td>
+					</tr>
+					<tr>
+						<td colspan="2" class="trade-cell">
+							<input type="button" id="proposetradebutton" value="Đề Xuất" onclick="game.proposeTrade();" data-i18n="btn_propose_trade" data-i18n-attr="value" />
+							<input type="button" id="canceltradebutton" value="Hủy" onclick='game.cancelTrade();' data-i18n="btn_cancel_trade" data-i18n-attr="value" />
+							<input type="button" id="accepttradebutton" value="Chấp Nhận" onclick="game.acceptTrade();" data-i18n="btn_accept_trade" data-i18n-attr="value" />
+							<input type="button" id="rejecttradebutton" value="Từ Chối" onclick='game.cancelTrade();' data-i18n="btn_reject_trade" data-i18n-attr="value" />
+						</td>
+					</tr>
+				</table>
+			</div>
+			<!-- Help panel -->
+			<div id="center-help" class="center-panel" style="display:none;">
+				<div class="help-scroll">
+					<div class="help-back"><button onclick="showCenterPanel('center-game');" data-i18n="help_back">Quay lại</button></div>
+
+					<h2 class="help-title" data-i18n="help_title">Tycoon Saigon — Hướng Dẫn</h2>
+					<p class="help-intro" data-i18n="help_intro">Tycoon Saigon dựa trên cơ chế Monopoly cổ điển nhưng thêm các yếu tố kinh tế vĩ mô. Dưới đây là những điểm khác biệt quan trọng.</p>
+
+					<div class="help-section">
+						<h3 data-i18n="help_passgo_title">Đi Qua GO</h3>
+						<p data-i18n="help_passgo_desc">Khi đi qua GO: nhận lương $200 → trừ Chi Phí Sinh Hoạt → trừ Lãi Suất Thế Chấp. Nếu tiền âm sau các khoản trừ, ngân hàng sẽ tịch thu tài sản.</p>
+					</div>
+
+					<div class="help-section">
+						<h3 data-i18n="help_col_title">Chi Phí Sinh Hoạt</h3>
+						<p data-i18n="help_col_detail">Mỗi lần qua GO: trả = (lần gieo đầu tiên trong lượt) × (số vòng đã đi). Vòng 1 gieo 7 → trả $7. Vòng 10 gieo 7 → trả $70. Càng chơi lâu, phí càng tăng — buộc phải giao dịch thay vì giữ thế bế tắc.</p>
+					</div>
+
+					<div class="help-section">
+						<h3 data-i18n="help_interest_title">Lãi Suất Thế Chấp</h3>
+						<p data-i18n="help_interest_detail">Mỗi bất động sản thế chấp tích lũy 10% lãi trên nợ mỗi vòng qua GO. VD: Thế chấp 3 ô tổng $500 → trả $50 lãi mỗi vòng. Nếu không trả nổi → tịch thu tài sản.</p>
+					</div>
+
+					<div class="help-section">
+						<h3 data-i18n="help_crisis_title">Khủng Hoảng Tài Chính</h3>
+						<p data-i18n="help_crisis_detail">Khi tổng nợ hệ thống (tất cả người chơi) vượt $1000, khủng hoảng bùng nổ: lãi suất tăng từ 10% → 25%. Khủng hoảng KÉO DÀI cho đến khi tổng nợ giảm dưới $1000. Sau khi kết thúc, có 8 vòng bình yên trước khi khủng hoảng mới có thể xảy ra.</p>
+					</div>
+
+					<div class="help-section">
+						<h3 data-i18n="help_credit_title">Giới Hạn Tín Dụng</h3>
+						<p data-i18n="help_credit_detail">Ngân hàng từ chối cho vay thêm nếu thu nhập của bạn (lương + tiền thuê) không đủ trả lãi vay. Nếu vi phạm nghiêm trọng, ngân hàng tịch thu bất động sản rẻ nhất.</p>
+					</div>
+
+					<div class="help-section">
+						<h3 data-i18n="help_jail_title">Nhà Tù</h3>
+						<p data-i18n="help_jail_detail">Khi ở tù: bạn vẫn thu tiền thuê NHƯNG chỉ thu thuê cơ bản (không tính nhà/khách sạn). Tin nhắn "Tài sản đóng băng" sẽ hiển thị. Quyết định: nộp $50 ra tù để thu đầy đủ, hay ở lại để tránh trả tiền thuê cho người khác?</p>
+					</div>
+
+					<div class="help-section">
+						<h3 data-i18n="help_firesale_title">Phá Sản & Bán Tháo</h3>
+						<p data-i18n="help_firesale_detail">Khi phá sản: 1) Bán tất cả nhà/khách sạn với giá 50%. 2) Đấu giá từng bất động sản (đắt nhất trước). 3) Nếu đủ tiền trả nợ → sống sót. 4) Không ai thừa kế đế chế — mọi bất động sản đều phải qua đấu giá.</p>
+					</div>
+
+					<div class="help-section">
+						<h3 data-i18n="help_snipe_title">Thẻ Snipe</h3>
+						<p data-i18n="help_snipe_detail">Thẻ giữ được từ bộ Cơ Hội. Khi bất động sản bị đấu giá, bạn mua ngay với giá gốc — bỏ qua tất cả đấu giá. Trong bán tháo, bạn được chọn TRƯỚC một bất động sản bất kỳ. Đây là cơ chế lật ngược tình thế chính.</p>
+					</div>
+
+					<div class="help-section">
+						<h3 data-i18n="help_casino_title">Sòng Bài</h3>
+						<p data-i18n="help_casino_detail">Thay thế ô Đỗ Xe Miễn Phí. Chọn mức cược ($10-$60), gieo đôi để thắng. Mức cược cao cần đôi lớn hơn. Chỉ được gieo MỘT lần mỗi lượt ghé thăm.</p>
+					</div>
+
+					<div class="help-section">
+						<h3 data-i18n="help_cards_title">Thẻ Đặc Biệt</h3>
+						<p data-i18n="help_cards_detail">3 thẻ mới: THẢM HỌA (mọi người gieo và trả 5× xúc xắc), THUẾ BẤT ĐỘNG SẢN ($40/nhà, $115/khách sạn), và THẺ SNIPE (mua bất động sản đấu giá với giá gốc).</p>
+					</div>
+
+					<div class="help-section">
+						<h3 data-i18n="help_ai_title">AI Đối Thủ</h3>
+						<p data-i18n="help_ai_detail">Cá Mập: mua hung hăng, vay nhiều, đề xuất giao dịch sớm. Cẩn Thận: giữ tiền, ít xây, không giao dịch. Độc Quyền: nhắm nhóm tốt nhất, trả phí để hoàn thành bộ. Claude: dùng AI thật để đàm phán.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Auction bar: floats at bottom of center, over game controls -->
+		<div id="auction-bar" style="display:none;"></div>
+	</div>
+	<table id="board">
+		<tr>
+			<td class="cell board-corner" id="cell20"></td>
+			<td class="cell board-top" id="cell21"></td>
+			<td class="cell board-top" id="cell22"></td>
+			<td class="cell board-top" id="cell23"></td>
+			<td class="cell board-top" id="cell24"></td>
+			<td class="cell board-top" id="cell25"></td>
+			<td class="cell board-top" id="cell26"></td>
+			<td class="cell board-top" id="cell27"></td>
+			<td class="cell board-top" id="cell28"></td>
+			<td class="cell board-top" id="cell29"></td>
+			<td class="cell board-corner" id="cell30"></td>
+		</tr><tr>
+			<td class="cell board-left" id="cell19"></td>
+			<td colspan="9" class="board-center"></td>
+			<td class="cell board-right" id="cell31"></td>
+		</tr><tr>
+			<td class="cell board-left" id="cell18"></td>
+			<td colspan="9" class="board-center"></td>
+			<td class="cell board-right" id="cell32"></td>
+		</tr><tr>
+			<td class="cell board-left" id="cell17"></td>
+			<td colspan="9" class="board-center"></td>
+			<td class="cell board-right" id="cell33"></td>
+		</tr><tr>
+			<td class="cell board-left" id="cell16"></td>
+			<td colspan="9" class="board-center"></td>
+			<td class="cell board-right" id="cell34"></td>
+		</tr><tr>
+			<td class="cell board-left" id="cell15"></td>
+			<td colspan="9" class="board-center"></td>
+			<td class="cell board-right" id="cell35"></td>
+		</tr><tr>
+			<td class="cell board-left" id="cell14"></td>
+			<td colspan="9" class="board-center"></td>
+			<td class="cell board-right" id="cell36"></td>
+		</tr><tr>
+			<td class="cell board-left" id="cell13"></td>
+			<td colspan="9" class="board-center"></td>
+			<td class="cell board-right" id="cell37"></td>
+		</tr><tr>
+			<td class="cell board-left" id="cell12"></td>
+			<td colspan="9" class="board-center"></td>
+			<td class="cell board-right" id="cell38"></td>
+		</tr><tr>
+			<td class="cell board-left" id="cell11"></td>
+			<td colspan="9" class="board-center">
+				<div id="jail"></div>
+			</td>
+			<td class="cell board-right" id="cell39"></td>
+		</tr><tr>
+			<td class="cell board-corner" id="cell10"></td>
+			<td class="cell board-bottom" id="cell9"></td>
+			<td class="cell board-bottom" id="cell8"></td>
+			<td class="cell board-bottom" id="cell7"></td>
+			<td class="cell board-bottom" id="cell6"></td>
+			<td class="cell board-bottom" id="cell5"></td>
+			<td class="cell board-bottom" id="cell4"></td>
+			<td class="cell board-bottom" id="cell3"></td>
+			<td class="cell board-bottom" id="cell2"></td>
+			<td class="cell board-bottom" id="cell1"></td>
+			<td class="cell board-corner" id="cell0"></td>
+		</tr>
+	</table>
+
+	<div id="moneybarwrap">
+		<div id="moneybar">
+			<table>
+				<tr id="moneybarrow1" class="money-bar-row">
+					<td class="moneybararrowcell"><img src="images/arrow.png" id="p1arrow" class="money-bar-arrow" alt=">"/></td>
+					<td id="p1moneybar" class="moneybarcell">
+						<div><span id="p1moneyname" >Player 1</span>:</div>
+						<div>$<span id="p1money">1500</span></div>
+					</td>
+				</tr>
+				<tr id="moneybarrow2" class="money-bar-row">
+					<td class="moneybararrowcell"><img src="images/arrow.png" id="p2arrow" class="money-bar-arrow" alt=">" /></td>
+					<td id="p2moneybar" class="moneybarcell">
+						<div><span id="p2moneyname" >Player 2</span>:</div>
+						<div>$<span id="p2money">1500</span></div>
+					</td>
+				</tr>
+				<tr id="moneybarrow3" class="money-bar-row">
+					<td class="moneybararrowcell"><img src="images/arrow.png" id="p3arrow" class="money-bar-arrow" alt=">" /></td>
+					<td id="p3moneybar" class="moneybarcell">
+						<div><span id="p3moneyname" >Player 3</span>:</div>
+						<div>$<span id="p3money">1500</span></div>
+					</td>
+				</tr>
+				<tr id="moneybarrow4" class="money-bar-row">
+					<td class="moneybararrowcell"><img src="images/arrow.png" id="p4arrow" class="money-bar-arrow" alt=">" /></td>
+					<td id="p4moneybar" class="moneybarcell">
+						<div><span id="p4moneyname" >Player 4</span>:</div>
+						<div>$<span id="p4money">1500</span></div>
+					</td>
+				</tr>
+				<tr id="moneybarrow5" class="money-bar-row">
+					<td class="moneybararrowcell"><img src="images/arrow.png" id="p5arrow" class="money-bar-arrow" alt=">" /></td>
+					<td id="p5moneybar" class="moneybarcell">
+						<div><span id="p5moneyname" >Player 5</span>:</div>
+						<div>$<span id="p5money">1500</span></div>
+					</td>
+				</tr>
+				<tr id="moneybarrow6" class="money-bar-row">
+					<td class="moneybararrowcell"><img src="images/arrow.png" id="p6arrow" class="money-bar-arrow" alt=">" /></td>
+					<td id="p6moneybar" class="moneybarcell">
+						<div><span id="p6moneyname" >Player 6</span>:</div>
+						<div>$<span id="p6money">1500</span></div>
+					</td>
+				</tr>
+				<tr id="moneybarrow7" class="money-bar-row">
+					<td class="moneybararrowcell"><img src="images/arrow.png" id="p7arrow" class="money-bar-arrow" alt=">" /></td>
+					<td id="p7moneybar" class="moneybarcell">
+						<div><span id="p7moneyname" >Player 7</span>:</div>
+						<div>$<span id="p7money">1500</span></div>
+					</td>
+				</tr>
+				<tr id="moneybarrow8" class="money-bar-row">
+					<td class="moneybararrowcell"><img src="images/arrow.png" id="p8arrow" class="money-bar-arrow" alt=">" /></td>
+					<td id="p8moneybar" class="moneybarcell">
+						<div><span id="p8moneyname" >Player 8</span>:</div>
+						<div>$<span id="p8money">1500</span></div>
+					</td>
+				</tr>
+				<tr id="moneybarrowbutton">
+					<td class="moneybararrowcell">&nbsp;</td>
+					<td style="border: none;">
+						<input type="button" id="viewstats" value="Xem thống kê" data-i18n="btn_view_stats" data-i18n-attr="value" />
+					<input type="button" id="viewtimeline" value="Biểu đồ" data-i18n="btn_timeline" data-i18n-attr="value" onclick="showTimeline();" />
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+	<div id="greeting">
+		<div class="greet-lang-toggle">
+			<button class="lang-toggle-btn" onclick="toggleLang();" data-i18n="lang_toggle">EN</button>
+		</div>
+
+		<div class="greet-hero">
+			<div class="greet-logo-main">TYCOON</div>
+			<div class="greet-logo-accent">SAIGON</div>
+			<div class="greet-tagline" data-i18n="greet_tagline">Trò chơi bất động sản Sài Gòn</div>
+		</div>
+
+		<div class="greet-overview" data-i18n="greet_overview">Một biến thể Monopoly lấy cảm hứng từ các quận và địa danh TP.HCM, với cơ chế kinh tế vĩ mô thay đổi hoàn toàn cuộc chơi — lãi suất thế chấp, chi phí sinh hoạt, bong bóng tài chính, và đấu giá thanh lý tài sản.</div>
+
+		<div class="greet-section-title" data-i18n="greet_mechanics_title">Cơ Chế Đặc Biệt</div>
+
+		<div class="greet-cards">
+			<div class="greet-card">
+				<div class="greet-card-title" data-i18n="greet_mortgage_title">Lãi Suất Thế Chấp</div>
+				<div class="greet-card-desc" data-i18n="greet_mortgage_desc">Mỗi bất động sản thế chấp tích lũy 10% lãi suất mỗi vòng. Lãi được tính khi đi qua GO. Thế chấp chồng chất sẽ đẩy nhanh vòng xoáy phá sản.</div>
+			</div>
+			<div class="greet-card">
+				<div class="greet-card-title" data-i18n="greet_col_title">Chi Phí Sinh Hoạt</div>
+				<div class="greet-card-desc" data-i18n="greet_col_desc">Mỗi lần qua GO, bạn trả phí = lần gieo đầu tiên × số vòng đã đi. Càng chơi lâu càng tốn kém — buộc người chơi phải giao dịch thay vì giữ thế bế tắc.</div>
+			</div>
+			<div class="greet-card">
+				<div class="greet-card-title" data-i18n="greet_bubble_title">Bong Bóng &amp; Sụp Đổ</div>
+				<div class="greet-card-desc" data-i18n="greet_bubble_desc">Khi tổng nợ thế chấp vượt $1000, Khủng Hoảng Tài Chính bùng nổ: lãi suất tăng lên 25%, người chơi vay quá mức bị gọi ký quỹ và tịch thu tài sản.</div>
+			</div>
+			<div class="greet-card">
+				<div class="greet-card-title" data-i18n="greet_snipe_title">Thẻ Snipe</div>
+				<div class="greet-card-desc" data-i18n="greet_snipe_desc">Thẻ giữ được. Khi bất động sản bị đấu giá hoặc thanh lý, bạn giành quyền mua với giá gốc — cơ chế lật ngược tình thế chính của trò chơi.</div>
+			</div>
+			<div class="greet-card">
+				<div class="greet-card-title" data-i18n="greet_firesale_title">Phá Sản Thanh Lý</div>
+				<div class="greet-card-desc" data-i18n="greet_firesale_desc">Không có chuyện thừa kế đế chế. Tài sản phá sản được đấu giá từng cái một. Người phá sản giữ lại tài sản chưa bán nếu trả đủ nợ.</div>
+			</div>
+			<div class="greet-card">
+				<div class="greet-card-title" data-i18n="greet_casino_title">Sòng Bài</div>
+				<div class="greet-card-desc" data-i18n="greet_casino_desc">Thay thế ô Đỗ Xe Miễn Phí. Chọn mức cược và gieo đôi để thắng — từ $10 thắng $50 (đôi bất kỳ) đến $60 thắng $1000 (chỉ đôi 6). Rủi ro cao, thưởng lớn.</div>
+			</div>
+			<div class="greet-card">
+				<div class="greet-card-title" data-i18n="greet_ai_title">Đối Thủ AI</div>
+				<div class="greet-card-desc" data-i18n="greet_ai_desc">4 tính cách AI: Cá Mập (tấn công), Cẩn Thận (phòng thủ), Độc Quyền (chiến lược), và Claude (dùng AI thật để đàm phán giao dịch).</div>
+			</div>
+		</div>
+
+		<div class="greet-play-wrap">
+			<button class="greet-play-btn" onclick="document.getElementById('greeting').style.display='none'; document.getElementById('setup').style.display='block'; document.getElementById('noF5').style.display='block';" data-i18n="greet_play">Chơi Ngay</button>
+		</div>
+	</div>
+
+	<div id="setup">
+		<div style="margin-bottom: 10px; text-align: right;">
+			<button class="lang-toggle-btn" onclick="toggleLang();" style="cursor:pointer; padding:4px 12px; font-weight:bold; border:1px solid #8B0000; border-radius:4px; background:#FFFEF5; color:#8B0000; font-size:13px;" data-i18n="lang_toggle">EN</button>
+		</div>
+		<div style="margin-bottom: 20px;">
+			<span data-i18n="lbl_select_players">Chọn số người chơi.</span>
+			<select id="playernumber" title="Select the number of players for the game.">
+				<option>2</option>
+				<option>3</option>
+				<option selected="selected">4</option>
+				<option>5</option>
+				<option>6</option>
+				<option>7</option>
+				<option>8</option>
+			</select>
+		</div>
+
+		<div id="player1input" class="player-input">
+			Player 1: <input type="text" id="player1name" title="Player name" maxlength="16" value="Player 1" />
+			<select id="player1color" title="Player color">
+				<option style="color: aqua;">Aqua</option>
+				<option style="color: black;">Black</option>
+				<option style="color: blue;">Blue</option>
+				<option style="color: fuchsia;">Fuchsia</option>
+				<option style="color: gray;">Gray</option>
+				<option style="color: green;">Green</option>
+				<option style="color: lime;">Lime</option>
+				<option style="color: maroon;">Maroon</option>
+				<option style="color: navy;">Navy</option>
+				<option style="color: olive;">Olive</option>
+				<option style="color: orange;">Orange</option>
+				<option style="color: purple;">Purple</option>
+				<option style="color: red;">Red</option>
+				<option style="color: silver;">Silver</option>
+				<option style="color: teal;">Teal</option>
+				<option selected="selected" style="color: yellow;">Yellow</option>
+			</select>
+			<select id="player1ai" title="Choose whether this player is controled by a human or by the computer." onclick="document.getElementById('player1name').disabled = this.value !== '0';">
+				<option value="0" selected="selected">Human</option>
+				<option value="1">AI (Test)</option>
+				<option value="2">AI (Shark)</option>
+				<option value="3">AI (Careful)</option>
+				<option value="4">AI (Monopolist)</option>
+				<option value="5">AI (Claude)</option>
+			</select>
+		</div>
+
+		<div id="player2input" class="player-input">
+			Player 2: <input type="text" id="player2name" title="Player name" maxlength="16" value="Player 2" />
+			<select id="player2color" title="Player color">
+				<option style="color: aqua;">Aqua</option>
+				<option style="color: black;">Black</option>
+				<option selected="selected" style="color: blue;">Blue</option>
+				<option style="color: fuchsia;">Fuchsia</option>
+				<option style="color: gray;">Gray</option>
+				<option style="color: green;">Green</option>
+				<option style="color: lime;">Lime</option>
+				<option style="color: maroon;">Maroon</option>
+				<option style="color: navy;">Navy</option>
+				<option style="color: olive;">Olive</option>
+				<option style="color: orange;">Orange</option>
+				<option style="color: purple;">Purple</option>
+				<option style="color: red;">Red</option>
+				<option style="color: silver;">Silver</option>
+				<option style="color: teal;">Teal</option>
+				<option style="color: yellow;">Yellow</option>
+			</select>
+			<select id="player2ai" title="Choose whether this player is controled by a human or by the computer." onclick="document.getElementById('player2name').disabled = this.value !== '0';">
+				<option value="0" selected="selected">Human</option>
+				<option value="1">AI (Test)</option>
+				<option value="2">AI (Shark)</option>
+				<option value="3">AI (Careful)</option>
+				<option value="4">AI (Monopolist)</option>
+				<option value="5">AI (Claude)</option>
+			</select>
+		</div>
+
+		<div id="player3input" class="player-input">
+			Player 3: <input type="text" id="player3name" title="Player name" maxlength="16" value="Player 3" />
+			<select id="player3color" title="Player color">
+				<option style="color: aqua;">Aqua</option>
+				<option style="color: black;">Black</option>
+				<option style="color: blue;">Blue</option>
+				<option style="color: fuchsia;">Fuchsia</option>
+				<option style="color: gray;">Gray</option>
+				<option style="color: green;">Green</option>
+				<option style="color: lime;">Lime</option>
+				<option style="color: maroon;">Maroon</option>
+				<option style="color: navy;">Navy</option>
+				<option style="color: olive;">Olive</option>
+				<option style="color: orange;">Orange</option>
+				<option style="color: purple;">Purple</option>
+				<option selected="selected" style="color: red;">Red</option>
+				<option style="color: silver;">Silver</option>
+				<option style="color: teal;">Teal</option>
+				<option style="color: yellow;">Yellow</option>
+			</select>
+			<select id="player3ai" title="Choose whether this player is controled by a human or by the computer." onclick="document.getElementById('player3name').disabled = this.value !== '0';">
+				<option value="0" selected="selected">Human</option>
+				<option value="1">AI (Test)</option>
+				<option value="2">AI (Shark)</option>
+				<option value="3">AI (Careful)</option>
+				<option value="4">AI (Monopolist)</option>
+				<option value="5">AI (Claude)</option>
+			</select>
+		</div>
+
+		<div id="player4input" class="player-input">
+			Player 4: <input type="text" id="player4name" title="Player name" maxlength="16" value="Player 4" />
+			<select id="player4color" title="Player color">
+				<option style="color: aqua;">Aqua</option>
+				<option style="color: black;">Black</option>
+				<option style="color: blue;">Blue</option>
+				<option style="color: fuchsia;">Fuchsia</option>
+				<option style="color: gray;">Gray</option>
+				<option style="color: green;">Green</option>
+				<option selected="selected" style="color: lime;">Lime</option>
+				<option style="color: maroon;">Maroon</option>
+				<option style="color: navy;">Navy</option>
+				<option style="color: olive;">Olive</option>
+				<option style="color: orange;">Orange</option>
+				<option style="color: purple;">Purple</option>
+				<option style="color: red;">Red</option>
+				<option style="color: silver;">Silver</option>
+				<option style="color: teal;">Teal</option>
+				<option style="color: yellow;">Yellow</option>
+			</select>
+			<select id="player4ai" title="Choose whether this player is controled by a human or by the computer." onclick="document.getElementById('player4name').disabled = this.value !== '0';">
+				<option value="0" selected="selected">Human</option>
+				<option value="1">AI (Test)</option>
+				<option value="2">AI (Shark)</option>
+				<option value="3">AI (Careful)</option>
+				<option value="4">AI (Monopolist)</option>
+				<option value="5">AI (Claude)</option>
+			</select>
+		</div>
+
+		<div id="player5input" class="player-input">
+			Player 5: <input type="text" id="player5name" title="Player name" maxlength="16" value="Player 5" />
+			<select id="player5color" title="Player color">
+				<option style="color: aqua;">Aqua</option>
+				<option style="color: black;">Black</option>
+				<option style="color: blue;">Blue</option>
+				<option style="color: fuchsia;">Fuchsia</option>
+				<option style="color: gray;">Gray</option>
+				<option selected="selected" style="color: green;">Green</option>
+				<option style="color: lime;">Lime</option>
+				<option style="color: maroon;">Maroon</option>
+				<option style="color: navy;">Navy</option>
+				<option style="color: olive;">Olive</option>
+				<option style="color: orange;">Orange</option>
+				<option style="color: purple;">Purple</option>
+				<option style="color: red;">Red</option>
+				<option style="color: silver;">Silver</option>
+				<option style="color: teal;">Teal</option>
+				<option style="color: yellow;">Yellow</option>
+			</select>
+			<select id="player5ai" title="Choose whether this player is controled by a human or by the computer." onclick="document.getElementById('player5name').disabled = this.value !== '0';">
+				<option value="0" selected="selected">Human</option>
+				<option value="1">AI (Test)</option>
+				<option value="2">AI (Shark)</option>
+				<option value="3">AI (Careful)</option>
+				<option value="4">AI (Monopolist)</option>
+				<option value="5">AI (Claude)</option>
+			</select>
+		</div>
+
+		<div id="player6input" class="player-input">
+			Player 6: <input type="text" id="player6name" title="Player name" maxlength="16" value="Player 6" />
+			<select id="player6color" title="Player color">
+				<option selected="selected" style="color: aqua;">Aqua</option>
+				<option style="color: black;">Black</option>
+				<option style="color: blue;">Blue</option>
+				<option style="color: fuchsia;">Fuchsia</option>
+				<option style="color: gray;">Gray</option>
+				<option style="color: green;">Green</option>
+				<option style="color: lime;">Lime</option>
+				<option style="color: maroon;">Maroon</option>
+				<option style="color: navy;">Navy</option>
+				<option style="color: olive;">Olive</option>
+				<option style="color: orange;">Orange</option>
+				<option style="color: purple;">Purple</option>
+				<option style="color: red;">Red</option>
+				<option style="color: silver;">Silver</option>
+				<option style="color: teal;">Teal</option>
+				<option style="color: yellow;">Yellow</option>
+			</select>
+			<select id="player6ai" title="Choose whether this player is controled by a human or by the computer." onclick="document.getElementById('player6name').disabled = this.value !== '0';">
+				<option value="0" selected="selected">Human</option>
+				<option value="1">AI (Test)</option>
+				<option value="2">AI (Shark)</option>
+				<option value="3">AI (Careful)</option>
+				<option value="4">AI (Monopolist)</option>
+				<option value="5">AI (Claude)</option>
+			</select>
+		</div>
+
+		<div id="player7input" class="player-input">
+			Player 7: <input type="text" id="player7name" title="Player name" maxlength="16" value="Player 7" />
+			<select id="player7color" title="Player color">
+				<option style="color: aqua;">Aqua</option>
+				<option style="color: black;">Black</option>
+				<option style="color: blue;">Blue</option>
+				<option style="color: fuchsia;">Fuchsia</option>
+				<option style="color: gray;">Gray</option>
+				<option style="color: green;">Green</option>
+				<option style="color: lime;">Lime</option>
+				<option style="color: maroon;">Maroon</option>
+				<option style="color: navy;">Navy</option>
+				<option style="color: olive;">Olive</option>
+				<option selected="selected" style="color: orange;">Orange</option>
+				<option style="color: purple;">Purple</option>
+				<option style="color: red;">Red</option>
+				<option style="color: silver;">Silver</option>
+				<option style="color: teal;">Teal</option>
+				<option style="color: yellow;">Yellow</option>
+			</select>
+			<select id="player7ai" title="Choose whether this player is controled by a human or by the computer." onclick="document.getElementById('player7name').disabled = this.value !== '0';">
+				<option value="0" selected="selected">Human</option>
+				<option value="1">AI (Test)</option>
+				<option value="2">AI (Shark)</option>
+				<option value="3">AI (Careful)</option>
+				<option value="4">AI (Monopolist)</option>
+				<option value="5">AI (Claude)</option>
+			</select>
+		</div>
+
+		<div id="player8input" class="player-input">
+			Player 8: <input type="text" id="player8name" title="Player name" maxlength="16" value="Player 8" />
+			<select id="player8color" title="Player color">
+				<option style="color: aqua;">Aqua</option>
+				<option style="color: black;">Black</option>
+				<option style="color: blue;">Blue</option>
+				<option style="color: fuchsia;">Fuchsia</option>
+				<option style="color: gray;">Gray</option>
+				<option style="color: green;">Green</option>
+				<option style="color: lime;">Lime</option>
+				<option style="color: maroon;">Maroon</option>
+				<option style="color: navy;">Navy</option>
+				<option style="color: olive;">Olive</option>
+				<option style="color: orange;">Orange</option>
+				<option selected="selected" style="color: purple;">Purple</option>
+				<option style="color: red;">Red</option>
+				<option style="color: silver;">Silver</option>
+				<option style="color: teal;">Teal</option>
+				<option style="color: yellow;">Yellow</option>
+			</select>
+			<select id="player8ai" title="Choose whether this player is controled by a human or by the computer." onclick="document.getElementById('player8name').disabled = this.value !== '0';">
+				<option value="0" selected="selected">Human</option>
+				<option value="1">AI (Test)</option>
+				<option value="2">AI (Shark)</option>
+				<option value="3">AI (Careful)</option>
+				<option value="4">AI (Monopolist)</option>
+				<option value="5">AI (Claude)</option>
+			</select>
+		</div>
+
+		<div id="claude-api-setup" style="margin: 15px 0; padding: 10px; border: 1px solid #555; border-radius: 6px; background: #1a1a2e; display: none;">
+			<label style="color: #e0e0e0; font-size: 13px;">Claude API Key (required for AI Claude players):</label><br/>
+			<input type="password" id="claude-api-key" placeholder="sk-ant-..." style="width: 320px; margin-top: 4px; padding: 4px 8px; font-size: 12px; background: #0d0d1a; color: #e0e0e0; border: 1px solid #444; border-radius: 4px;" />
+			<div style="color: #888; font-size: 11px; margin-top: 4px;">Key is kept in memory only — never stored or sent anywhere except Anthropic's API.</div>
+		</div>
+
+		<div style="margin: 20px 0px;">
+			<input type="button" data-i18n="btn_start" data-i18n-attr="value" value="Bắt Đầu" onclick="setup();" title="Begin playing." />
+		</div>
+
+		<div id="noF5" data-i18n="lbl_no_f5">Lưu ý: Tải lại trang hoặc rời khỏi trang có thể kết thúc ván chơi.</div>
+	</div>
+
+	<script>
+	// Show/hide Claude API key input when any player is set to AI (Claude)
+	function checkClaudeAISelected() {
+		var found = false;
+		for (var i = 1; i <= 8; i++) {
+			var sel = document.getElementById('player' + i + 'ai');
+			if (sel && sel.value === '5') { found = true; break; }
+		}
+		var el = document.getElementById('claude-api-setup');
+		if (el) el.style.display = found ? 'block' : 'none';
+	}
+	// Attach onchange to all AI selects
+	document.addEventListener('DOMContentLoaded', function() {
+		for (var i = 1; i <= 8; i++) {
+			var sel = document.getElementById('player' + i + 'ai');
+			if (sel) {
+				sel.addEventListener('change', function() {
+					document.getElementById('player' + this.id.replace('ai','name')).disabled = this.value !== '0';
+					checkClaudeAISelected();
+				});
+			}
+		}
+	});
+	</script>
+
+	<!-- Old #control and #trade removed — now inside #board-center-overlay -->
+
+</body>
+</html>
