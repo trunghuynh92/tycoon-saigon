@@ -4550,34 +4550,48 @@ function play() {
 function setup() {
 	pcount = parseInt(document.getElementById("playernumber").value, 10);
 
-	var playerArray = new Array(pcount);
-	var p;
-
-	playerArray.randomize();
-
+	// Collect form configs and roll dice for turn order
+	var configs = [];
 	for (var i = 1; i <= pcount; i++) {
-		p = player[playerArray[i - 1]];
+		var d1 = Math.floor(Math.random() * 6) + 1;
+		var d2 = Math.floor(Math.random() * 6) + 1;
+		configs.push({
+			color: document.getElementById("player" + i + "color").value.toLowerCase(),
+			aiType: document.getElementById("player" + i + "ai").value,
+			humanName: document.getElementById("player" + i + "name").value,
+			d1: d1, d2: d2, roll: d1 + d2,
+			tiebreak: Math.random()
+		});
+	}
 
+	// Sort by roll descending; random tiebreak for equal rolls
+	configs.sort(function(a, b) {
+		if (b.roll !== a.roll) return b.roll - a.roll;
+		return b.tiebreak - a.tiebreak;
+	});
 
-		p.color = document.getElementById("player" + i + "color").value.toLowerCase();
+	// Assign to player[1..pcount] in sorted order (highest roll = first turn)
+	for (var i = 0; i < configs.length; i++) {
+		var p = player[i + 1];
+		var cfg = configs[i];
+		p.color = cfg.color;
 
-		var aiType = document.getElementById("player" + i + "ai").value;
-		if (aiType === "0") {
-			p.name = document.getElementById("player" + i + "name").value;
+		if (cfg.aiType === "0") {
+			p.name = cfg.humanName;
 			p.human = true;
-		} else if (aiType === "1") {
+		} else if (cfg.aiType === "1") {
 			p.human = false;
 			p.AI = new AITest(p);
-		} else if (aiType === "2") {
+		} else if (cfg.aiType === "2") {
 			p.human = false;
 			p.AI = new AIShark(p);
-		} else if (aiType === "3") {
+		} else if (cfg.aiType === "3") {
 			p.human = false;
 			p.AI = new AICareful(p);
-		} else if (aiType === "4") {
+		} else if (cfg.aiType === "4") {
 			p.human = false;
 			p.AI = new AIMonopolist(p);
-		} else if (aiType === "5") {
+		} else if (cfg.aiType === "5") {
 			p.human = false;
 			p.AI = new AIClaude(p);
 		}
@@ -4613,7 +4627,25 @@ function setup() {
 		originalPlayers.push({ name: player[i].name, color: player[i].color });
 	}
 
-	play();
+	// Show first-roll results, then start the game
+	var rollHtml = "<div style='text-align:center;'>"
+		+ "<h3 style='margin:0 0 10px;'>" + t('first_roll_title') + "</h3>"
+		+ "<table style='margin:0 auto;border-collapse:collapse;'>";
+	for (var i = 0; i < configs.length; i++) {
+		var name = player[i + 1].name;
+		var cfg = configs[i];
+		var first = i === 0 ? " &#9733;" : "";
+		rollHtml += "<tr style='border-bottom:1px solid #555;'>"
+			+ "<td style='padding:6px 8px;font-weight:bold;color:" + cfg.color + ";'>" + (i + 1) + ".</td>"
+			+ "<td style='padding:6px 8px;'>" + name + "</td>"
+			+ "<td style='padding:6px 4px;'><img src='images/Die_" + cfg.d1 + ".png' height='28' width='28'/>"
+			+ " <img src='images/Die_" + cfg.d2 + ".png' height='28' width='28'/></td>"
+			+ "<td style='padding:6px 8px;font-weight:bold;font-size:16px;'>" + cfg.roll + first + "</td>"
+			+ "</tr>";
+	}
+	rollHtml += "</table></div>";
+
+	boardMsg(rollHtml, play);
 }
 
 // function togglecheck(elementid) {
