@@ -122,7 +122,7 @@ const CHANCE = [
 	{ type: 'nearestUtility' },                             // 5
 	{ type: 'collect', amount: 50 },                        // 6
 	{ type: 'nearestRailroad' },                            // 7
-	{ type: 'propertyTax' },                                // 8 — replaces pay 15
+	{ type: 'taxAuditCard' },                               // 8 — holdable Tax Audit
 	{ type: 'advance', to: 5 },                             // 9
 	{ type: 'advance', to: 39 },                            // 10
 	{ type: 'advance', to: 24 },                            // 11
@@ -190,6 +190,7 @@ function createEngine(template, playerConfigs, rng, options) {
 			chestJailCard: false,
 			chanceJailCard: false,
 			snipeCard: false,          // holdable — play to grab foreclosed property at face value
+			taxAuditCard: false,       // holdable — play to trigger property tax on all players
 			bankrupt: false,
 			bankruptRound: null,
 			totalInterestPaid: 0,
@@ -788,13 +789,19 @@ function applyCard(engine, player, card, deck, diceSum) {
 			}
 			return;
 		}
-		case 'propertyTax': {
+		case 'taxAuditCard':
 			if (!EVENTS_ENABLED) {
-				// Fallback: old pay $15
 				pay(engine, player, 15, null);
 				return;
 			}
-			// Property Tax Reassessment: ALL players pay based on their own buildings
+			player.taxAuditCard = true;
+			log(engine, `${player.name} draws TAX AUDIT CARD — holds until opponents build up`);
+			return;
+		case 'propertyTax': {
+			if (!EVENTS_ENABLED) {
+				pay(engine, player, 15, null);
+				return;
+			}
 			log(engine, `*** PROPERTY TAX REASSESSMENT — all players pay $${TAX_PER_HOUSE}/house, $${TAX_PER_HOTEL}/hotel ***`);
 			addEvent(engine, 'propertyTax', 'Property Tax — $' + TAX_PER_HOUSE + '/house, $' + TAX_PER_HOTEL + '/hotel');
 			for (const other of engine.players) {
@@ -818,7 +825,37 @@ function applyCard(engine, player, card, deck, diceSum) {
 }
 
 // =============================================================
-// 7b. Bubble + Crash system
+// 7b. Tax Audit — AI plays holdable card
+// =============================================================
+function tryPlayTaxAudit(engine, player) {
+	if (!player.taxAuditCard || !EVENTS_ENABLED) return false;
+	let myBuildings = 0, oppBuildings = 0;
+	for (const sq of engine.squares) {
+		if (sq.owner === player.index) myBuildings += sq.hotel ? 5 : sq.house;
+		else if (sq.owner > 0) oppBuildings += sq.hotel ? 5 : sq.house;
+	}
+	if (oppBuildings <= myBuildings + 3) return false;
+	player.taxAuditCard = false;
+	log(engine, `*** ${player.name} plays TAX AUDIT CARD — all players pay $${TAX_PER_HOUSE}/house, $${TAX_PER_HOTEL}/hotel ***`);
+	addEvent(engine, 'taxAudit', 'Tax Audit played by ' + player.name);
+	for (const other of engine.players) {
+		if (other.bankrupt) continue;
+		let h = 0, ht = 0;
+		for (const sq of engine.squares) {
+			if (sq.owner === other.index) { h += sq.house; ht += sq.hotel; }
+		}
+		const cost = h * TAX_PER_HOUSE + ht * TAX_PER_HOTEL;
+		if (cost > 0) {
+			other.totalPropertyTaxPaid += cost;
+			log(engine, `  ${other.name} pays $${cost} (${h} houses, ${ht} hotels)`);
+			pay(engine, other, cost, null);
+		}
+	}
+	return true;
+}
+
+// =============================================================
+// 7c. Bubble + Crash system
 // =============================================================
 function getSystemDebt(engine) {
 	let total = 0;
@@ -1315,6 +1352,10 @@ function takeTurn(engine, player) {
 }
 
 function endOfTurnActions(engine, player) {
+	if (player.bankrupt) return;
+
+	// 0. Play Tax Audit card if opponents are building ahead
+	tryPlayTaxAudit(engine, player);
 	if (player.bankrupt) return;
 
 	// 1. Voluntary unmortgage
