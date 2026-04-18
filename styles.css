@@ -13,7 +13,109 @@ td {
 
 #setup {
 	display: none;
-	margin: 15px;
+	min-height: 100vh;
+	background: linear-gradient(160deg, #0d3318 0%, #1a5c2e 40%, #145228 100%);
+	color: #FFFEF5;
+	font-family: Arial, sans-serif;
+	padding: 40px 20px 60px;
+	box-sizing: border-box;
+}
+#setup .setup-title {
+	text-align: center;
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: 28px;
+	color: #DAA520;
+	letter-spacing: 3px;
+	margin-bottom: 24px;
+}
+#setup .player-input {
+	margin-bottom: 8px;
+	font-size: 14px;
+}
+#setup .player-input label {
+	display: inline-block;
+	width: 70px;
+	font-weight: bold;
+	color: #e8d8a8;
+}
+#setup input[type="text"] {
+	background: rgba(255,255,255,0.1);
+	border: 1px solid rgba(255,255,255,0.25);
+	border-radius: 4px;
+	color: #FFFEF5;
+	padding: 5px 8px;
+	font-size: 13px;
+	width: 140px;
+}
+#setup select {
+	background: rgba(255,255,255,0.1);
+	border: 1px solid rgba(255,255,255,0.25);
+	border-radius: 4px;
+	color: #FFFEF5;
+	padding: 4px 6px;
+	font-size: 13px;
+}
+#setup option {
+	background: #1a5c2e;
+	color: #FFFEF5;
+}
+#setup .setup-center {
+	max-width: 600px;
+	margin: 0 auto;
+}
+.ai-guide {
+	margin-top: 24px;
+	padding: 16px;
+	border: 1px solid rgba(218,165,32,0.3);
+	border-radius: 8px;
+	background: rgba(0,0,0,0.2);
+}
+.ai-guide h3 {
+	font-family: Georgia, "Times New Roman", serif;
+	color: #DAA520;
+	letter-spacing: 2px;
+	font-size: 16px;
+	margin: 0 0 12px;
+}
+.ai-guide-row {
+	margin-bottom: 8px;
+	font-size: 13px;
+	line-height: 1.5;
+	color: #d4d4c0;
+}
+.ai-guide-row strong {
+	color: #e8d8a8;
+}
+#setup .setup-actions {
+	margin-top: 24px;
+	text-align: center;
+}
+#setup .setup-actions input[type="button"] {
+	padding: 10px 28px;
+	font-size: 16px;
+	font-weight: bold;
+	border: 1px solid #1a5c2e;
+	border-radius: 6px;
+	cursor: pointer;
+	background: #8B0000;
+	color: #FFFEF5;
+	letter-spacing: 1px;
+}
+#setup .setup-actions input[type="button"]:hover {
+	background: #a01010;
+}
+#setup .setup-actions #resumebutton {
+	background: #2a6e3f;
+	border-color: #1a5c2e;
+}
+#setup .setup-actions #resumebutton:hover {
+	background: #358c4f;
+}
+#setup #noF5 {
+	text-align: center;
+	color: #888;
+	font-size: 12px;
+	margin-top: 16px;
 }
 
 #moneybar {

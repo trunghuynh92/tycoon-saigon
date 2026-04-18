@@ -473,11 +473,13 @@
 	</div>
 
 	<div id="setup">
-		<div style="margin-bottom: 10px; text-align: right;">
-			<button class="lang-toggle-btn" onclick="toggleLang();" style="cursor:pointer; padding:4px 12px; font-weight:bold; border:1px solid #8B0000; border-radius:4px; background:#FFFEF5; color:#8B0000; font-size:13px;" data-i18n="lang_toggle">EN</button>
+		<div class="greet-lang-toggle">
+			<button class="lang-toggle-btn" onclick="toggleLang();" data-i18n="lang_toggle">EN</button>
 		</div>
+		<div class="setup-center">
+		<div class="setup-title" data-i18n="setup_title">Game Setup</div>
 		<div style="margin-bottom: 20px;">
-			<span data-i18n="lbl_select_players">Chọn số người chơi.</span>
+			<span data-i18n="lbl_select_players">Select number of players.</span>
 			<select id="playernumber" title="Select the number of players for the game.">
 				<option>2</option>
 				<option>3</option>
@@ -735,12 +737,21 @@
 			<div style="color: #888; font-size: 11px; margin-top: 4px;">Key is kept in memory only — never stored or sent anywhere except Anthropic's API.</div>
 		</div>
 
-		<div style="margin: 20px 0px;">
-			<input type="button" data-i18n="btn_start" data-i18n-attr="value" value="Start" onclick="setup();" title="Begin playing." />
-			<input type="button" id="resumebutton" data-i18n="btn_resume" data-i18n-attr="value" value="Resume Saved Game" onclick="resumeGame();" title="Continue your saved game." style="display:none;margin-left:10px;background:#2a6e3f;color:#fff;font-weight:bold;padding:6px 16px;border:1px solid #1a5c2e;border-radius:4px;cursor:pointer;" />
+		<div class="ai-guide">
+			<h3 data-i18n="setup_ai_title">AI Personalities</h3>
+			<div class="ai-guide-row"><strong data-i18n="setup_ai_shark_name">Shark</strong> — <span data-i18n="setup_ai_shark_desc">Aggressive leverager. Buys on thin cash cushions, mortgages to build houses fast, proposes trades early. High risk, high reward.</span></div>
+			<div class="ai-guide-row"><strong data-i18n="setup_ai_careful_name">Careful</strong> — <span data-i18n="setup_ai_careful_desc">Cash hoarder. Keeps large reserves, rarely builds, never trades. Survives longest but wins least. Camps in jail late-game.</span></div>
+			<div class="ai-guide-row"><strong data-i18n="setup_ai_mono_name">Monopolist</strong> — <span data-i18n="setup_ai_mono_desc">Strategic group targeter. Ranks every color group, pays premiums to complete monopolies, and defends against opponents completing theirs.</span></div>
+			<div class="ai-guide-row"><strong data-i18n="setup_ai_claude_name">Claude</strong> <em>(coming soon)</em> — <span data-i18n="setup_ai_claude_desc">Uses real AI (Claude) for trade negotiation. Reads game context to evaluate deals that rule-based AIs cannot.</span></div>
+		</div>
+
+		<div class="setup-actions">
+			<input type="button" data-i18n="btn_start" data-i18n-attr="value" value="Start Game" onclick="setup();" />
+			<input type="button" id="resumebutton" data-i18n="btn_resume" data-i18n-attr="value" value="Resume Saved Game" onclick="resumeGame();" style="display:none;" />
 		</div>
 
 		<div id="noF5" data-i18n="lbl_no_f5">Note: Reloading or leaving may end your game.</div>
+		</div><!-- .setup-center -->
 	</div>
 
 	<script>
