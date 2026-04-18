@@ -1206,6 +1206,17 @@ td {
 	color: #fff;
 	text-shadow: 0 1px 0 rgba(0,0,0,0.3);
 }
+.card-badge-playable {
+	cursor: pointer;
+	animation: badge-pulse 1.5s infinite;
+}
+.card-badge-playable:hover {
+	filter: brightness(1.2);
+}
+@keyframes badge-pulse {
+	0%, 100% { box-shadow: 0 0 0 0 rgba(204,102,0,0.4); }
+	50% { box-shadow: 0 0 0 4px rgba(204,102,0,0); }
+}
 .card-badge-jail {
 	background: #666;
 	color: #fff;

@@ -2461,7 +2461,14 @@ function updateMoney() {
 			if (hasBadges) {
 				html += "<div class='card-row'>";
 				if (rd.snipe) html += "<span class='card-badge card-badge-snipe'>SNIPE</span><span class='card-help'>?<span class='card-help-tip'>" + t('help_snipe') + "</span></span>";
-				if (rd.taxAudit) html += "<span class='card-badge card-badge-tax'>TAX</span><span class='card-help'>?<span class='card-help-tip'>" + t('help_tax_audit') + "</span></span>";
+				if (rd.taxAudit) {
+					if (rd.index === turn && player[turn].human) {
+						html += "<span class='card-badge card-badge-tax card-badge-playable' onclick='confirmTaxAudit()' title='" + t('btn_tax_audit') + "'>TAX &#9654;</span>";
+					} else {
+						html += "<span class='card-badge card-badge-tax'>TAX</span>";
+					}
+					html += "<span class='card-help'>?<span class='card-help-tip'>" + t('help_tax_audit') + "</span></span>";
+				}
 				if (rd.jailCards > 0) html += "<span class='card-badge card-badge-jail'>JAIL&times;" + rd.jailCards + "</span><span class='card-help'>?<span class='card-help-tip'>" + t('help_jail') + "</span></span>";
 				if (rd.debt > 0 && rd.dscr !== Infinity && rd.dscr < DSCR_FLOOR) {
 					html += "<span class='card-badge card-badge-credit-danger'>" + t('credit_danger')
@@ -2499,8 +2506,6 @@ function updateMoney() {
 		else $("#nextbutton").hide();
 	}
 
-	if (p.human && p.taxAuditCard) $("#taxauditbutton").show();
-	else $("#taxauditbutton").hide();
 }
 
 function updateDice() {
@@ -3563,6 +3568,22 @@ function drawTaxAuditCard() {
 		+ "<p>" + t('tax_audit_card_draw_desc') + "</p>"
 		+ "</div>"
 	);
+}
+
+function confirmTaxAudit() {
+	var p = player[turn];
+	if (!p.human || !p.taxAuditCard) return;
+
+	var html = "<div style='text-align:center;'>"
+		+ "<h3 style='color:#cc6600;'>" + t('tax_audit_card_title') + "</h3>"
+		+ "<p>" + t('tax_audit_confirm') + "</p>"
+		+ "<div style='margin-top:12px;'>"
+		+ "<input type='button' value='" + t('btn_confirm_tax') + "' onclick='playTaxAuditCard()' style='background:#cc6600;color:white;font-weight:bold;padding:6px 16px;border:1px solid #994d00;border-radius:4px;cursor:pointer;margin-right:8px;' />"
+		+ "<input type='button' value='" + t('btn_cancel_tax') + "' onclick='dismissBoardMsg()' style='padding:6px 16px;border-radius:4px;cursor:pointer;' />"
+		+ "</div></div>";
+	document.getElementById("board-msg-text").innerHTML = html;
+	document.getElementById("board-msg-btn").style.display = "none";
+	showCenterPanel('center-msg');
 }
 
 function playTaxAuditCard() {
