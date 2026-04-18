@@ -468,7 +468,8 @@
 		</div>
 
 		<div class="greet-play-wrap">
-			<button class="greet-play-btn" onclick="document.getElementById('greeting').style.display='none'; document.getElementById('setup').style.display='block'; document.getElementById('noF5').style.display='block';" data-i18n="greet_play">Chơi Ngay</button>
+			<button class="greet-play-btn" onclick="document.getElementById('greeting').style.display='none'; document.getElementById('setup').style.display='block'; document.getElementById('noF5').style.display='block';" data-i18n="greet_play">Play Now</button>
+			<button class="greet-resume-btn" id="greet-resume" onclick="document.getElementById('greeting').style.display='none'; resumeGame();" style="display:none;" data-i18n="btn_resume">Resume Saved Game</button>
 		</div>
 	</div>
 
@@ -778,6 +779,8 @@
 		}
 		if (typeof hasSavedGame === 'function' && hasSavedGame()) {
 			document.getElementById('resumebutton').style.display = 'inline-block';
+			var gr = document.getElementById('greet-resume');
+			if (gr) gr.style.display = 'inline-block';
 		}
 	});
 	</script>

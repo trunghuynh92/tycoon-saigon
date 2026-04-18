@@ -1850,6 +1850,28 @@ td {
 	transform: translateY(0);
 	box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
+.greet-resume-btn {
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: 18px;
+	font-weight: bold;
+	letter-spacing: 2px;
+	color: #FFFEF5;
+	background: linear-gradient(to bottom, #358c4f, #2a6e3f);
+	border: 2px solid #1a5c2e;
+	border-radius: 8px;
+	padding: 12px 36px;
+	cursor: pointer;
+	box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+	margin-left: 16px;
+	transition: background 0.2s ease, transform 0.1s ease;
+}
+.greet-resume-btn:hover {
+	background: linear-gradient(to bottom, #40a05a, #358c4f);
+	transform: translateY(-1px);
+}
+.greet-resume-btn:active {
+	transform: translateY(0);
+}
 
 /* ========================================================
    Board Center Message Panel (non-blocking)
