@@ -5,6 +5,11 @@ function trackEvent(name, data) {
 	try { if (window.va) window.va("event", { name: name, data: data }); } catch(e) {}
 }
 
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
 // ============================================================
 // Tycoon Saigon — Save / Resume (localStorage)
 // ============================================================
@@ -1542,11 +1547,11 @@ function Game() {
 				boardMsg("<p style='text-align:center;'><strong>" + t('pop_trade_claude_thinking', {name: recipient.name}) + "</strong><br/><span style='font-size:24px;'>🤔</span></p>");
 
 				recipient.AI.evaluateTradeAsync(tradeObj).then(function(result) {
-					addAlert(recipient.name + " (Claude): " + (result.reason || ""));
+					addAlert(recipient.name + " (Claude): " + escapeHtml(result.reason));
 
 					if (result.decision === "accept") {
 						boardMsg("<p>" + t('msg_trade_accepted', {name: recipient.name}) + "</p>"
-							+ "<p style='font-size:11px;color:#888;'>Reason: " + (result.reason || "") + "</p>");
+							+ "<p style='font-size:11px;color:#888;'>Reason: " + escapeHtml(result.reason) + "</p>");
 						gameRef.acceptTrade(reversedTrade);
 					} else if (result.decision === "counter" && result.cash) {
 						// Build counter-offer: Claude wants more cash
@@ -1561,7 +1566,7 @@ function Game() {
 
 						if (initiator.human) {
 							boardMsg("<p>" + t('msg_trade_counter', {name: recipient.name, amount: counterMoney}) + "</p>"
-								+ "<p style='font-size:11px;color:#888;'>Reason: " + (result.reason || "") + "</p>");
+								+ "<p style='font-size:11px;color:#888;'>Reason: " + escapeHtml(result.reason) + "</p>");
 							writeTrade(counterFromRecipient);
 							showCenterPanel('center-trade');
 							$("#proposetradebutton, #canceltradebutton").hide();
@@ -1589,7 +1594,7 @@ function Game() {
 					} else {
 						// Reject
 						boardMsg("<p>" + t('msg_trade_declined', {name: recipient.name}) + "</p>"
-							+ "<p style='font-size:11px;color:#888;'>Reason: " + (result.reason || "") + "</p>", function() {
+							+ "<p style='font-size:11px;color:#888;'>Reason: " + escapeHtml(result.reason) + "</p>", function() {
 							gameRef.cancelTrade();
 						});
 					}
