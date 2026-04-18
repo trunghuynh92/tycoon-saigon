@@ -5032,6 +5032,10 @@ window.onload = function() {
 
 	$("#nextbutton").click(game.next);
 	$("#noscript").hide();
+
+	// Apply current language to all static text on load
+	if (typeof updateStaticText === 'function') updateStaticText();
+
 	// Show greeting screen first; setup shown when player clicks Play
 	$("#greeting").show();
 
