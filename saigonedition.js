@@ -100,52 +100,52 @@ square[36] = new Square(t('sq_chance'), t('sq_chance_desc'), "#FFFFFF");
 square[38] = new Square(t('sq_luxury_tax'), t('sq_luxury_tax_desc'), "#FFFFFF");
 
 // Brown group (3) — $60
-square[1] = new Square("Bình Thạnh", "$60", "#8B4513", 60, 3, 2, 10, 30, 90, 160, 250);
-square[3] = new Square("Gò Vấp", "$60", "#8B4513", 60, 3, 4, 20, 60, 180, 320, 450);
+square[1] = new Square(t('prop_binh_thanh'), "$60", "#8B4513", 60, 3, 2, 10, 30, 90, 160, 250);
+square[3] = new Square(t('prop_go_vap'), "$60", "#8B4513", 60, 3, 4, 20, 60, 180, 320, 450);
 
 // Light Blue group (4) — $100–120
-square[6] = new Square("Tân Bình", "$100", "#87CEEB", 100, 4, 6, 30, 90, 270, 400, 550);
-square[8] = new Square("Tân Phú", "$100", "#87CEEB", 100, 4, 6, 30, 90, 270, 400, 550);
-square[9] = new Square("Bình Tân", "$120", "#87CEEB", 120, 4, 8, 40, 100, 300, 450, 600);
+square[6] = new Square(t('prop_tan_binh'), "$100", "#87CEEB", 100, 4, 6, 30, 90, 270, 400, 550);
+square[8] = new Square(t('prop_tan_phu'), "$100", "#87CEEB", 100, 4, 6, 30, 90, 270, 400, 550);
+square[9] = new Square(t('prop_binh_tan'), "$120", "#87CEEB", 120, 4, 8, 40, 100, 300, 450, 600);
 
 // Pink group (5) — $140–160
-square[11] = new Square("Phú Nhuận", "$140", "#FF0080", 140, 5, 10, 50, 150, 450, 625, 750);
-square[13] = new Square("Quận 3", "$140", "#FF0080", 140, 5, 10, 50, 150, 450, 625, 750);
-square[14] = new Square("Quận 10", "$160", "#FF0080", 160, 5, 12, 60, 180, 500, 700, 900);
+square[11] = new Square(t('prop_phu_nhuan'), "$140", "#FF0080", 140, 5, 10, 50, 150, 450, 625, 750);
+square[13] = new Square(t('prop_quan3'), "$140", "#FF0080", 140, 5, 10, 50, 150, 450, 625, 750);
+square[14] = new Square(t('prop_quan10'), "$160", "#FF0080", 160, 5, 12, 60, 180, 500, 700, 900);
 
 // Orange group (6) — $180–200
-square[16] = new Square("Quận 5", "$180", "#FFA500", 180, 6, 14, 70, 200, 550, 750, 950);
-square[18] = new Square("Quận 11", "$180", "#FFA500", 180, 6, 14, 70, 200, 550, 750, 950);
-square[19] = new Square("Quận 6", "$200", "#FFA500", 200, 6, 16, 80, 220, 600, 800, 1000);
+square[16] = new Square(t('prop_quan5'), "$180", "#FFA500", 180, 6, 14, 70, 200, 550, 750, 950);
+square[18] = new Square(t('prop_quan11'), "$180", "#FFA500", 180, 6, 14, 70, 200, 550, 750, 950);
+square[19] = new Square(t('prop_quan6'), "$200", "#FFA500", 200, 6, 16, 80, 220, 600, 800, 1000);
 
 // Red group (7) — $220–240
-square[21] = new Square("Quận 4", "$220", "#FF0000", 220, 7, 18, 90, 250, 700, 875, 1050);
-square[23] = new Square("Quận 8", "$220", "#FF0000", 220, 7, 18, 90, 250, 700, 875, 1050);
-square[24] = new Square("Quận 7", "$240", "#FF0000", 240, 7, 20, 100, 300, 750, 925, 1100);
+square[21] = new Square(t('prop_quan4'), "$220", "#FF0000", 220, 7, 18, 90, 250, 700, 875, 1050);
+square[23] = new Square(t('prop_quan8'), "$220", "#FF0000", 220, 7, 18, 90, 250, 700, 875, 1050);
+square[24] = new Square(t('prop_quan7'), "$240", "#FF0000", 240, 7, 20, 100, 300, 750, 925, 1100);
 
 // Yellow group (8) — $260–280
-square[26] = new Square("Thủ Đức", "$260", "#FFFF00", 260, 8, 22, 110, 330, 800, 975, 1150);
-square[27] = new Square("Quận 9", "$260", "#FFFF00", 260, 8, 22, 110, 330, 800, 975, 1150);
-square[29] = new Square("Quận 2", "$280", "#FFFF00", 280, 8, 24, 120, 360, 850, 1025, 1200);
+square[26] = new Square(t('prop_thu_duc'), "$260", "#FFFF00", 260, 8, 22, 110, 330, 800, 975, 1150);
+square[27] = new Square(t('prop_quan9'), "$260", "#FFFF00", 260, 8, 22, 110, 330, 800, 975, 1150);
+square[29] = new Square(t('prop_quan2'), "$280", "#FFFF00", 280, 8, 24, 120, 360, 850, 1025, 1200);
 
 // Green group (9) — $300–320 — HCMC prestige neighborhoods
-square[31] = new Square("Đa Kao", "$300", "#008000", 300, 9, 26, 130, 390, 900, 1100, 1275);
-square[32] = new Square("Tân Định", "$300", "#008000", 300, 9, 26, 130, 390, 900, 1100, 1275);
-square[34] = new Square("Thủ Thiêm", "$320", "#008000", 320, 9, 28, 150, 450, 1000, 1200, 1400);
+square[31] = new Square(t('prop_da_kao'), "$300", "#008000", 300, 9, 26, 130, 390, 900, 1100, 1275);
+square[32] = new Square(t('prop_tan_dinh'), "$300", "#008000", 300, 9, 26, 130, 390, 900, 1100, 1275);
+square[34] = new Square(t('prop_thu_thiem'), "$320", "#008000", 320, 9, 28, 150, 450, 1000, 1200, 1400);
 
 // Dark Blue group (10) — $350–400 — HCMC prestige
-square[37] = new Square("Thảo Điền", "$350", "#0000FF", 350, 10, 35, 175, 500, 1100, 1300, 1500);
-square[39] = new Square("Quận 1", "$400", "#0000FF", 400, 10, 50, 200, 600, 1400, 1700, 2000);
+square[37] = new Square(t('prop_thao_dien'), "$350", "#0000FF", 350, 10, 35, 175, 500, 1100, 1300, 1500);
+square[39] = new Square(t('prop_quan1'), "$400", "#0000FF", 400, 10, 50, 200, 600, 1400, 1700, 2000);
 
 // Transit hubs (group 1) — replaces the four railroads
-square[5]  = new Square("Sân bay Tân Sơn Nhất", "$200", "#FFFFFF", 200, 1);
-square[15] = new Square("Ga Sài Gòn", "$200", "#FFFFFF", 200, 1);
-square[25] = new Square("Bến xe Miền Đông", "$200", "#FFFFFF", 200, 1);
-square[35] = new Square("Bến Nhà Rồng", "$200", "#FFFFFF", 200, 1);
+square[5]  = new Square(t('prop_airport'), "$200", "#FFFFFF", 200, 1);
+square[15] = new Square(t('prop_railway'), "$200", "#FFFFFF", 200, 1);
+square[25] = new Square(t('prop_bus_east'), "$200", "#FFFFFF", 200, 1);
+square[35] = new Square(t('prop_dragon_wharf'), "$200", "#FFFFFF", 200, 1);
 
 // Utilities (group 2)
-square[12] = new Square("EVN (Điện Lực)", "$150", "#FFFFFF", 150, 2);
-square[28] = new Square("SAWACO (Cấp Nước)", "$150", "#FFFFFF", 150, 2);
+square[12] = new Square(t('prop_evn'), "$150", "#FFFFFF", 150, 2);
+square[28] = new Square(t('prop_sawaco'), "$150", "#FFFFFF", 150, 2);
 
 // ------------------------------------------------------------
 // Cộng Đồng (Community Chest) — Vietnamese flavor, same effects
