@@ -629,6 +629,7 @@ td {
 
 .cell {
 	position: relative;
+	z-index: 2;
 	top: 0px;
 	left: 0px;
 	padding: 0px;
@@ -659,7 +660,7 @@ td {
 #board-center-overlay {
 	display: none;
 	position: absolute;
-	z-index: 7;
+	z-index: 1;
 	pointer-events: auto;
 	flex-direction: column;
 	overflow: hidden;
