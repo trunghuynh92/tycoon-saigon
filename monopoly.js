@@ -4838,6 +4838,9 @@ function play() {
 }
 
 function setup() {
+	if (hasSavedGame() && !confirm(t('confirm_new_game'))) return;
+	clearSavedGame();
+
 	pcount = parseInt(document.getElementById("playernumber").value, 10);
 
 	// Collect form configs for first-roll ceremony
