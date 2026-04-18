@@ -1424,20 +1424,24 @@ function Game() {
 					} else {
 						// Reject
 						boardMsg("<p>" + t('msg_trade_declined', {name: recipient.name}) + "</p>"
-							+ "<p style='font-size:11px;color:#888;'>Reason: " + (result.reason || "") + "</p>");
-						gameRef.cancelTrade();
+							+ "<p style='font-size:11px;color:#888;'>Reason: " + (result.reason || "") + "</p>", function() {
+							gameRef.cancelTrade();
+						});
 					}
 				});
 				return; // Don't fall through — async will resolve
 			}
 
 			// Synchronous path (non-Claude AIs)
+			var self = this;
 			if (tradeResponse === true) {
-				boardMsg("<p>" + t('msg_trade_accepted', {name: recipient.name}) + "</p>");
-				this.acceptTrade(reversedTrade);
+				boardMsg("<p>" + t('msg_trade_accepted', {name: recipient.name}) + "</p>", function() {
+					self.acceptTrade(reversedTrade);
+				});
 			} else if (tradeResponse === false) {
-				boardMsg("<p>" + t('msg_trade_declined', {name: recipient.name}) + "</p>");
-				this.cancelTrade();
+				boardMsg("<p>" + t('msg_trade_declined', {name: recipient.name}) + "</p>", function() {
+					self.cancelTrade();
+				});
 				return;
 			} else if (tradeResponse instanceof Trade) {
 				// Counter-offer from the recipient AI.
