@@ -4563,51 +4563,20 @@ function play() {
 function setup() {
 	pcount = parseInt(document.getElementById("playernumber").value, 10);
 
-	// Collect form configs and roll dice for turn order
+	// Collect form configs for first-roll ceremony
 	var configs = [];
+	var AI_NAMES = {"1":"AI Test","2":"AI Shark","3":"AI Careful","4":"AI Monopolist","5":"AI Claude"};
 	for (var i = 1; i <= pcount; i++) {
-		var d1 = Math.floor(Math.random() * 6) + 1;
-		var d2 = Math.floor(Math.random() * 6) + 1;
+		var aiType = document.getElementById("player" + i + "ai").value;
 		configs.push({
 			color: document.getElementById("player" + i + "color").value.toLowerCase(),
-			aiType: document.getElementById("player" + i + "ai").value,
+			aiType: aiType,
 			humanName: document.getElementById("player" + i + "name").value,
-			d1: d1, d2: d2, roll: d1 + d2,
+			isHuman: aiType === "0",
+			displayName: aiType === "0" ? document.getElementById("player" + i + "name").value : AI_NAMES[aiType] || "AI",
+			d1: 0, d2: 0, roll: 0, rolled: false,
 			tiebreak: Math.random()
 		});
-	}
-
-	// Sort by roll descending; random tiebreak for equal rolls
-	configs.sort(function(a, b) {
-		if (b.roll !== a.roll) return b.roll - a.roll;
-		return b.tiebreak - a.tiebreak;
-	});
-
-	// Assign to player[1..pcount] in sorted order (highest roll = first turn)
-	for (var i = 0; i < configs.length; i++) {
-		var p = player[i + 1];
-		var cfg = configs[i];
-		p.color = cfg.color;
-
-		if (cfg.aiType === "0") {
-			p.name = cfg.humanName;
-			p.human = true;
-		} else if (cfg.aiType === "1") {
-			p.human = false;
-			p.AI = new AITest(p);
-		} else if (cfg.aiType === "2") {
-			p.human = false;
-			p.AI = new AIShark(p);
-		} else if (cfg.aiType === "3") {
-			p.human = false;
-			p.AI = new AICareful(p);
-		} else if (cfg.aiType === "4") {
-			p.human = false;
-			p.AI = new AIMonopolist(p);
-		} else if (cfg.aiType === "5") {
-			p.human = false;
-			p.AI = new AIClaude(p);
-		}
 	}
 
 	// Grab Claude API key if any Claude player is selected
@@ -4619,7 +4588,6 @@ function setup() {
 	$("#board, #moneybar").show();
 	$("#setup").hide();
 
-	// Position the board center overlay (logo, lang toggle, debt meter)
 	positionBoardCenterOverlay();
 
 	if (pcount === 2) {
@@ -4631,7 +4599,105 @@ function setup() {
 	document.getElementById("stats").style.top = "0px";
 	document.getElementById("stats").style.left = "0px";
 
-	// Save original player roster for timeline (before any eliminations)
+	// Start interactive first-roll ceremony
+	_firstRoll = { configs: configs, index: -1 };
+	_firstRollAdvance();
+}
+
+var _firstRoll = null;
+
+function _firstRollRender() {
+	var configs = _firstRoll.configs;
+	var idx = _firstRoll.index;
+
+	var html = "<div style='text-align:center;'>"
+		+ "<h3 style='margin:0 0 10px;'>" + t('first_roll_title') + "</h3>"
+		+ "<table style='margin:0 auto;border-collapse:collapse;'>";
+	for (var i = 0; i < configs.length; i++) {
+		var c = configs[i];
+		var highlight = (i === idx && !c.rolled) ? "background:rgba(255,255,255,0.08);" : "";
+		html += "<tr style='border-bottom:1px solid #555;" + highlight + "'>"
+			+ "<td style='padding:6px 8px;font-weight:bold;color:" + c.color + ";'>" + c.displayName + "</td>";
+		if (c.rolled) {
+			html += "<td style='padding:6px 4px;'><img src='images/Die_" + c.d1 + ".png' height='28' width='28'/>"
+				+ " <img src='images/Die_" + c.d2 + ".png' height='28' width='28'/></td>"
+				+ "<td style='padding:6px 8px;font-weight:bold;font-size:16px;'>" + c.roll + "</td>";
+		} else if (i === idx && c.isHuman) {
+			html += "<td colspan='2' style='padding:6px 8px;'>"
+				+ "<input type='button' value='" + t('btn_roll') + "' onclick='_firstRollDo()' "
+				+ "style='font-size:14px;padding:6px 20px;cursor:pointer;'/></td>";
+		} else if (i === idx) {
+			html += "<td colspan='2' style='padding:6px 8px;color:#aaa;'>...</td>";
+		} else {
+			html += "<td colspan='2' style='padding:6px 8px;color:#555;'>—</td>";
+		}
+		html += "</tr>";
+	}
+	html += "</table></div>";
+
+	document.getElementById("board-msg-text").innerHTML = html;
+	document.getElementById("board-msg-btn").style.display = "none";
+	showCenterPanel('center-msg');
+}
+
+function _firstRollAdvance() {
+	_firstRoll.index++;
+	var idx = _firstRoll.index;
+	var configs = _firstRoll.configs;
+
+	if (idx >= configs.length) {
+		_firstRollFinish();
+		return;
+	}
+
+	_firstRollRender();
+
+	if (!configs[idx].isHuman) {
+		setTimeout(function() {
+			var c = configs[idx];
+			c.d1 = Math.floor(Math.random() * 6) + 1;
+			c.d2 = Math.floor(Math.random() * 6) + 1;
+			c.roll = c.d1 + c.d2;
+			c.rolled = true;
+			_firstRollRender();
+			setTimeout(_firstRollAdvance, 700);
+		}, 400);
+	}
+}
+
+function _firstRollDo() {
+	var c = _firstRoll.configs[_firstRoll.index];
+	c.d1 = Math.floor(Math.random() * 6) + 1;
+	c.d2 = Math.floor(Math.random() * 6) + 1;
+	c.roll = c.d1 + c.d2;
+	c.rolled = true;
+	_firstRollRender();
+	setTimeout(_firstRollAdvance, 700);
+}
+
+function _firstRollFinish() {
+	var configs = _firstRoll.configs;
+
+	// Sort by roll descending; random tiebreak
+	configs.sort(function(a, b) {
+		if (b.roll !== a.roll) return b.roll - a.roll;
+		return b.tiebreak - a.tiebreak;
+	});
+
+	// Assign to player[1..pcount] in sorted order
+	for (var i = 0; i < configs.length; i++) {
+		var p = player[i + 1];
+		var cfg = configs[i];
+		p.color = cfg.color;
+		if (cfg.aiType === "0") { p.name = cfg.humanName; p.human = true; }
+		else if (cfg.aiType === "1") { p.human = false; p.AI = new AITest(p); }
+		else if (cfg.aiType === "2") { p.human = false; p.AI = new AIShark(p); }
+		else if (cfg.aiType === "3") { p.human = false; p.AI = new AICareful(p); }
+		else if (cfg.aiType === "4") { p.human = false; p.AI = new AIMonopolist(p); }
+		else if (cfg.aiType === "5") { p.human = false; p.AI = new AIClaude(p); }
+	}
+
+	// Save original player roster
 	originalPlayers = [];
 	gameLog = [];
 	turnCounter = 0;
@@ -4641,23 +4707,22 @@ function setup() {
 	}
 
 	// Track game start
-	var aiTypes = [];
-	var humanCount = 0;
+	var aiTypes = [], humanCount = 0;
 	for (var i = 1; i <= pcount; i++) {
 		if (player[i].human) humanCount++;
 		else if (player[i].AI) aiTypes.push(player[i].name.replace(/ \d+$/, ""));
 	}
 	trackEvent("game_started", { players: pcount, humans: humanCount, ais: aiTypes.join(",") });
 
-	// Show first-roll results, then start the game
-	var rollHtml = "<div style='text-align:center;'>"
+	// Show final order, then start the game
+	var html = "<div style='text-align:center;'>"
 		+ "<h3 style='margin:0 0 10px;'>" + t('first_roll_title') + "</h3>"
 		+ "<table style='margin:0 auto;border-collapse:collapse;'>";
 	for (var i = 0; i < configs.length; i++) {
-		var name = player[i + 1].name;
 		var cfg = configs[i];
+		var name = player[i + 1].name;
 		var first = i === 0 ? " &#9733;" : "";
-		rollHtml += "<tr style='border-bottom:1px solid #555;'>"
+		html += "<tr style='border-bottom:1px solid #555;'>"
 			+ "<td style='padding:6px 8px;font-weight:bold;color:" + cfg.color + ";'>" + (i + 1) + ".</td>"
 			+ "<td style='padding:6px 8px;'>" + name + "</td>"
 			+ "<td style='padding:6px 4px;'><img src='images/Die_" + cfg.d1 + ".png' height='28' width='28'/>"
@@ -4665,9 +4730,10 @@ function setup() {
 			+ "<td style='padding:6px 8px;font-weight:bold;font-size:16px;'>" + cfg.roll + first + "</td>"
 			+ "</tr>";
 	}
-	rollHtml += "</table></div>";
+	html += "</table></div>";
 
-	boardMsg(rollHtml, play);
+	_firstRoll = null;
+	boardMsg(html, play);
 }
 
 // function togglecheck(elementid) {
