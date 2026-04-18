@@ -3,7 +3,7 @@
 // Load this BEFORE saigonedition.js and monopoly.js
 // ============================================================
 
-var currentLang = 'vi';
+var currentLang = 'en';
 
 var LANG = {
 vi: {
