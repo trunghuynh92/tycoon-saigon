@@ -49,13 +49,13 @@ This is the "bubble pop" mechanic. A dominant player who leveraged aggressively 
 
 ### Event cards
 
-Three new card types replace some of the weaker original cards:
+Four new card types replace some of the weaker original cards:
 
 **Snipe Card** (Chance deck) — A holdable card, like Get Out of Jail Free. When you draw it, keep it in your hand. During foreclosure auctions, you can play the Snipe card to grab the property at face value, bypassing all bids. During fire-sale bankruptcy auctions, the snipe card is even more powerful: the holder gets **first pick** of all properties on the block before auctions begin, choosing any one at face value. This is the primary comeback mechanic — the leading player gets margin-called, their best properties hit the block, and you cherry-pick the one that completes your monopoly.
 
-**Catastrophe** (Community Chest deck) — When drawn, ALL players immediately roll dice and pay 5× their roll. Average hit is $35 per player, which sounds mild, but it fires on everyone simultaneously and can cascade — a player already squeezed by COL and interest might get pushed into debt resolution by an extra $35, triggering a foreclosure that feeds someone's Snipe card.
+**Tax Audit Card** (Chance deck) — A holdable card. When drawn, keep it in your hand. On any of your future turns, you can play it to trigger a city-wide property tax audit: **all players** pay $40 per house and $115 per hotel. The skill is in the timing — hold it until the leading player has built up heavily and you haven't. The card appears as a pulsing "TAX" badge in your money bar; click it and confirm to play. *"You filed an anonymous tip with the Tax Bureau. A city-wide property audit is launched!"*
 
-**Property Tax Reassessment** (Chance deck) — The drawing player pays $40 per house and $115 per hotel they own. This specifically punishes the overbuilder — a player with 9 houses on Orange pays $360, which can be devastating if they're cash-tight from aggressive building.
+**Catastrophe** (Community Chest deck) — When drawn, ALL players immediately roll dice and pay 5× their roll. Average hit is $35 per player, which sounds mild, but it fires on everyone simultaneously and can cascade — a player already squeezed by COL and interest might get pushed into debt resolution by an extra $35, triggering a foreclosure that feeds someone's Snipe card.
 
 ### Fire-Sale Bankruptcy
 
