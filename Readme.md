@@ -4,18 +4,22 @@ A Vietnamese-themed Monopoly variant built on top of IntrepidCoder's open-source
 
 Tycoon Saigon is a fork of [IntrepidCoder/monopoly](http://www.intrepidcoder.com/projects/monopoly/) and keeps that engine's vanilla JS + jQuery architecture. No build step — open `index.html` in a browser and play.
 
+## Play online
+
+**https://tycoon-saigon.vercel.app**
+
 ## Playing the game
 
-Open `index.html` in any modern browser. On the setup screen, pick 2–8 players. For each slot you can choose:
+Open the link above or `index.html` in any modern browser. On the setup screen, pick 2–8 players. For each slot you can choose:
 
 - **Human** — you click the dice and buttons
 - **AI (Test)** — the original baseline AI from the upstream project, kept for comparison
 - **AI (Shark)** — aggressive leverager, buys on thin cushions, proposes cash trades early
 - **AI (Careful)** — cash hoarder, rarely trades, camps in jail late-game
 - **AI (Monopolist)** — targets the highest-scored group, pays premiums for completion trades
-- **AI (Claude)** — uses the Claude API for trade negotiation; rule-based for all other decisions. Requires an Anthropic API key entered on the setup screen
+- **AI (Claude)** *(coming soon)* — uses the Claude API for trade negotiation; rule-based for all other decisions. Will be available as a premium feature.
 
-Mortgage interest, Cost of Living, and the Bubble + Crash event system are all on by default. The game plays like standard Monopoly with extra popups at pass-GO and dramatic event cards that can flip a game on its head.
+When the game starts, all players roll dice to determine turn order — highest roll goes first. Human players click to roll; AI players roll automatically. Mortgage interest, Cost of Living, and the Bubble + Crash event system are all on by default.
 
 ## New mechanics
 
@@ -64,11 +68,18 @@ Vanilla Monopoly's bankruptcy rule — the creditor inherits all properties — 
 
 The "stop when solvent" rule means the bankrupt player loses their best assets (since those are auctioned first and other players snatch them) but keeps the scraps. This creates a slow decline rather than instant death, and prevents any single player from inheriting a property empire. Snipe card holders get first pick before auctions begin.
 
-### Claude AI Trade Negotiation
+### Claude AI Trade Negotiation *(coming soon)*
 
 Players set to "AI (Claude)" use the Anthropic Claude API to evaluate incoming trade proposals. The AI receives full game state context — its cash, debt, DSCR, property holdings, monopoly progress, opponent positions, and crisis status — and returns a JSON decision (accept, reject, or counter-offer with reasoning). All other decisions (buying, building, mortgaging, jail) use the same rule-based logic as Monopolist. If the API call fails, a simple rule-based fallback handles the trade.
 
-To use Claude AI, enter your Anthropic API key on the setup screen. API calls go directly from the browser to `api.anthropic.com` (requires the `anthropic-dangerous-direct-browser-access` header). The model used is `claude-sonnet-4-20250514` with a 512-token limit per trade evaluation.
+In production, API calls are routed through a server-side proxy (`/api/claude-trade`) so the API key is never exposed to the browser. The model used is `claude-sonnet-4-20250514` with a 512-token limit per trade evaluation.
+
+### Trade abuse prevention
+
+To prevent API cost abuse, the game enforces:
+- **2 trade proposals per turn** per player
+- **3-turn cooldown** after a trade is rejected by the same player
+- **Duplicate trade detection** — resubmitting identical terms is blocked instantly
 
 ## AI personalities
 
@@ -80,7 +91,7 @@ All three new AIs share the same group-scoring machinery. Each group on the boar
 
 **Monopolist** plays the emergent scoring straight. It ranks every group, buys aggressively inside its top-scored group (including defensive buys to deny opponents), proposes trades for its highest-ranked one-away group at up to 1.75× face value, and camps in jail only after lap 28. It is the personality most likely to break the Orange/Red standoff.
 
-**Claude** delegates trade decisions to the Claude API, which receives serialized game state and returns reasoned accept/reject/counter decisions. Buying, building, and other decisions use the same logic as Monopolist. Claude's trade evaluation considers factors the rule-based AIs cannot — like reading bluff potential, assessing multi-step trade sequences, and weighing risk in the context of upcoming crisis probability.
+**Claude** *(coming soon)* delegates trade decisions to the Claude API, which receives serialized game state and returns reasoned accept/reject/counter decisions. Buying, building, and other decisions use the same logic as Monopolist. Claude's trade evaluation considers factors the rule-based AIs cannot — like reading bluff potential, assessing multi-step trade sequences, and weighing risk in the context of upcoming crisis probability.
 
 ## Simulator
 
@@ -124,19 +135,22 @@ Careful's higher win rate reflects its survivability in the no-trade sim environ
 
 ## Project layout
 
-    index.html              game entry point + Claude API setup UI
+    index.html              game entry point + setup UI
     monopoly.js             core game engine (turns, trades, fire-sale bankruptcy, auctions)
     ai.js                   AI personalities (Test, Shark, Careful, Monopolist, Claude)
+    lang.js                 i18n (Vietnamese / English)
     saigonedition.js        Saigon-themed board, property names, prices, groups
     classicedition.js       original US board (for reference / fallback)
     newyorkcityedition.js   NYC board variant from upstream
-    base/                   base rules and shared constants
+    api/claude-trade.js     Vercel Function — server-side Claude API proxy
+    apikey.local.js         local-only API key (gitignored)
     images/                 board and piece art
     styles.css              board and UI styling
     sim/tycoon-sim.js       headless Node simulator (fire-sale, DSCR, COL, events)
     sim/gen-timeline.js     single-game timeline chart generator (Chart.js)
     sim/test-balance.js     1000-game win rate / balance check
     sim-timeline.html       generated timeline chart (open in browser)
+    CLAUDE.md               guidance for Claude Code
     LICENSE                 upstream license
 
 ## Credits
