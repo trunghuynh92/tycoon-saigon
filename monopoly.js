@@ -6,6 +6,164 @@ function trackEvent(name, data) {
 }
 
 // ============================================================
+// Tycoon Saigon — Save / Resume (localStorage)
+// ============================================================
+var SAVE_KEY = "tycoon_saigon_save";
+
+function saveGame() {
+	try {
+		var players = [];
+		for (var i = 1; i <= pcount; i++) {
+			var p = player[i];
+			players.push({
+				name: p.name, color: p.color, index: p.index,
+				position: p.position, money: p.money, creditor: p.creditor,
+				jail: p.jail, jailroll: p.jailroll, human: p.human,
+				communityChestJailCard: p.communityChestJailCard,
+				chanceJailCard: p.chanceJailCard,
+				snipeCard: p.snipeCard, bidding: p.bidding,
+				lapsCompleted: p.lapsCompleted,
+				firstRollThisTurn: p.firstRollThisTurn,
+				aiType: p.human ? "0" : (p.AI instanceof AITest ? "1" :
+					p.AI instanceof AIShark ? "2" : p.AI instanceof AICareful ? "3" :
+					p.AI instanceof AIMonopolist ? "4" : p.AI instanceof AIClaude ? "5" : "0")
+			});
+		}
+		var squares = [];
+		for (var i = 0; i < 40; i++) {
+			squares.push({
+				owner: square[i].owner, mortgage: square[i].mortgage,
+				house: square[i].house, hotel: square[i].hotel,
+				landcount: square[i].landcount
+			});
+		}
+		var state = {
+			version: 1,
+			pcount: pcount, turn: turn, doublecount: doublecount,
+			turnCounter: turnCounter, gameRound: gameRound,
+			crisisActive: crisisActive, crisisRound: crisisRound,
+			lastCrisisRound: lastCrisisRound,
+			humanTradesThisTurn: humanTradesThisTurn,
+			tradeCooldowns: tradeCooldowns,
+			lastRejectedTrade: lastRejectedTrade,
+			players: players, squares: squares,
+			ccDeck: communityChestCards.deck, ccIndex: communityChestCards.index,
+			chDeck: chanceCards.deck, chIndex: chanceCards.index,
+			originalPlayers: originalPlayers,
+			eliminatedPlayers: eliminatedPlayers,
+			closure: game.getClosureState(),
+			savedAt: new Date().toISOString()
+		};
+		localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+	} catch(e) {}
+}
+
+function hasSavedGame() {
+	try {
+		var s = localStorage.getItem(SAVE_KEY);
+		if (!s) return false;
+		var state = JSON.parse(s);
+		return state && state.version === 1;
+	} catch(e) { return false; }
+}
+
+function clearSavedGame() {
+	try { localStorage.removeItem(SAVE_KEY); } catch(e) {}
+}
+
+function resumeGame() {
+	try {
+		var state = JSON.parse(localStorage.getItem(SAVE_KEY));
+		if (!state || state.version !== 1) return false;
+
+		pcount = state.pcount;
+		turn = state.turn;
+		doublecount = state.doublecount;
+		turnCounter = state.turnCounter;
+		gameRound = state.gameRound;
+		crisisActive = state.crisisActive;
+		crisisRound = state.crisisRound;
+		lastCrisisRound = state.lastCrisisRound;
+		humanTradesThisTurn = state.humanTradesThisTurn || 0;
+		tradeCooldowns = state.tradeCooldowns || {};
+		lastRejectedTrade = state.lastRejectedTrade || null;
+		originalPlayers = state.originalPlayers || [];
+		eliminatedPlayers = state.eliminatedPlayers || {};
+		gameLog = [];
+
+		// Restore players
+		for (var i = 0; i < state.players.length; i++) {
+			var sp = state.players[i];
+			var p = player[i + 1];
+			p.name = sp.name; p.color = sp.color; p.position = sp.position;
+			p.money = sp.money; p.creditor = sp.creditor;
+			p.jail = sp.jail; p.jailroll = sp.jailroll;
+			p.human = sp.human;
+			p.communityChestJailCard = sp.communityChestJailCard;
+			p.chanceJailCard = sp.chanceJailCard;
+			p.snipeCard = sp.snipeCard; p.bidding = sp.bidding;
+			p.lapsCompleted = sp.lapsCompleted;
+			p.firstRollThisTurn = sp.firstRollThisTurn;
+			if (!p.human) {
+				if (sp.aiType === "1") p.AI = new AITest(p);
+				else if (sp.aiType === "2") p.AI = new AIShark(p);
+				else if (sp.aiType === "3") p.AI = new AICareful(p);
+				else if (sp.aiType === "4") p.AI = new AIMonopolist(p);
+				else if (sp.aiType === "5") p.AI = new AIClaude(p);
+				p.name = sp.name;
+			}
+		}
+
+		// Restore squares
+		for (var i = 0; i < 40; i++) {
+			var ss = state.squares[i];
+			square[i].owner = ss.owner;
+			square[i].mortgage = ss.mortgage;
+			square[i].house = ss.house;
+			square[i].hotel = ss.hotel;
+			square[i].landcount = ss.landcount;
+		}
+
+		// Restore card decks
+		communityChestCards.deck = state.ccDeck;
+		communityChestCards.index = state.ccIndex;
+		chanceCards.deck = state.chDeck;
+		chanceCards.index = state.chIndex;
+
+		// Restore game closure state
+		if (state.closure) game.setClosureState(state.closure);
+
+		// Show board
+		$("#board, #moneybar").show();
+		$("#setup").hide();
+		positionBoardCenterOverlay();
+		if (pcount === 2) document.getElementById("stats").style.width = "454px";
+		else if (pcount === 3) document.getElementById("stats").style.width = "686px";
+		document.getElementById("stats").style.top = "0px";
+		document.getElementById("stats").style.left = "0px";
+
+		// Show crisis banner if active
+		if (crisisActive) {
+			var banner = document.getElementById("crisis-banner");
+			if (banner) {
+				var crisisRate = Math.round(INTEREST_RATE * CRISIS_INTEREST_MULT * 100);
+				banner.innerHTML = "⚠ FINANCIAL CRISIS — Interest: <span class='crisis-rate'>" + crisisRate + "%</span>"
+					+ " — Deleverage below $" + BUBBLE_THRESHOLD + " to end ⚠";
+				banner.style.display = "block";
+			}
+		}
+
+		updateMoney();
+		updatePosition();
+		updateOwned();
+
+		// Resume from saved turn
+		play();
+		return true;
+	} catch(e) { clearSavedGame(); return false; }
+}
+
+// ============================================================
 // Tycoon Saigon — Game Balance Constants
 // Tune these during playtesting.
 // ============================================================
@@ -1549,6 +1707,7 @@ function Game() {
 			// }
 			// document.getElementById("refresh").innerHTML += "<br><br><div><textarea type='text' style='width: 980px;' onclick='javascript:select();' />" + text + "</textarea></div>";
 
+			clearSavedGame();
 			trackEvent("game_completed", { winner: player[1].name, human: player[1].human, rounds: gameRound });
 			boardMsg("<p>" + t('pop_win', {name: player[1].name}) + "</p><div>", null, 3000);
 
@@ -1565,6 +1724,14 @@ function Game() {
 
 	this.resign = function() {
 		popup("<p>" + t('pop_resign') + "</p>", game.bankruptcy, "yes/no");
+	};
+
+	// Save/restore closure state
+	this.getClosureState = function() {
+		return { die1: die1, die2: die2, areDiceRolled: areDiceRolled };
+	};
+	this.setClosureState = function(s) {
+		die1 = s.die1; die2 = s.die2; areDiceRolled = s.areDiceRolled;
 	};
 
 	// getLiquidation accessor for use by executeSnipe (outside Game closure)
@@ -4486,6 +4653,9 @@ function play() {
 	if (game.auction()) {
 		return;
 	}
+
+	// Auto-save at the start of each turn
+	saveGame();
 
 	// Log end-of-turn snapshot for timeline
 	logTurnSnapshot();

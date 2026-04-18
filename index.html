@@ -736,10 +736,11 @@
 		</div>
 
 		<div style="margin: 20px 0px;">
-			<input type="button" data-i18n="btn_start" data-i18n-attr="value" value="Bắt Đầu" onclick="setup();" title="Begin playing." />
+			<input type="button" data-i18n="btn_start" data-i18n-attr="value" value="Start" onclick="setup();" title="Begin playing." />
+			<input type="button" id="resumebutton" data-i18n="btn_resume" data-i18n-attr="value" value="Resume Saved Game" onclick="resumeGame();" title="Continue your saved game." style="display:none;margin-left:10px;background:#2a6e3f;color:#fff;font-weight:bold;padding:6px 16px;border:1px solid #1a5c2e;border-radius:4px;cursor:pointer;" />
 		</div>
 
-		<div id="noF5" data-i18n="lbl_no_f5">Lưu ý: Tải lại trang hoặc rời khỏi trang có thể kết thúc ván chơi.</div>
+		<div id="noF5" data-i18n="lbl_no_f5">Note: Reloading or leaving may end your game.</div>
 	</div>
 
 	<script>
@@ -753,7 +754,7 @@
 		var el = document.getElementById('claude-api-setup');
 		if (el) el.style.display = found ? 'block' : 'none';
 	}
-	// Attach onchange to all AI selects
+	// Attach onchange to all AI selects + show resume button if saved game exists
 	document.addEventListener('DOMContentLoaded', function() {
 		for (var i = 1; i <= 8; i++) {
 			var sel = document.getElementById('player' + i + 'ai');
@@ -763,6 +764,9 @@
 					checkClaudeAISelected();
 				});
 			}
+		}
+		if (typeof hasSavedGame === 'function' && hasSavedGame()) {
+			document.getElementById('resumebutton').style.display = 'inline-block';
 		}
 	});
 	</script>

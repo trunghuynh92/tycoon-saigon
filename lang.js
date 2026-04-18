@@ -103,6 +103,7 @@ vi: {
 
 	// --- UI labels ---
 	btn_start: "Bắt Đầu",
+	btn_resume: "Tiếp Tục Ván Cũ",
 	btn_roll: "Gieo Xúc Xắc",
 	btn_resign: "Bỏ Cuộc",
 	btn_buy: "Mua",
@@ -480,6 +481,7 @@ en: {
 
 	// --- UI labels ---
 	btn_start: "Start Game",
+	btn_resume: "Resume Saved Game",
 	btn_roll: "Roll Dice",
 	btn_resign: "Resign",
 	btn_buy: "Buy",
