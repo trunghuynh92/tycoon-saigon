@@ -21,7 +21,7 @@ function saveGame() {
 				jail: p.jail, jailroll: p.jailroll, human: p.human,
 				communityChestJailCard: p.communityChestJailCard,
 				chanceJailCard: p.chanceJailCard,
-				snipeCard: p.snipeCard, bidding: p.bidding,
+				snipeCard: p.snipeCard, taxAuditCard: p.taxAuditCard, bidding: p.bidding,
 				lapsCompleted: p.lapsCompleted,
 				firstRollThisTurn: p.firstRollThisTurn,
 				aiType: p.human ? "0" : (p.AI instanceof AITest ? "1" :
@@ -101,7 +101,7 @@ function resumeGame() {
 			p.human = sp.human;
 			p.communityChestJailCard = sp.communityChestJailCard;
 			p.chanceJailCard = sp.chanceJailCard;
-			p.snipeCard = sp.snipeCard; p.bidding = sp.bidding;
+			p.snipeCard = sp.snipeCard; p.taxAuditCard = sp.taxAuditCard || false; p.bidding = sp.bidding;
 			p.lapsCompleted = sp.lapsCompleted;
 			p.firstRollThisTurn = sp.firstRollThisTurn;
 			if (!p.human) {
@@ -2057,6 +2057,7 @@ function Player(name, color) {
 	this.communityChestJailCard = false;
 	this.chanceJailCard = false;
 	this.snipeCard = false;       // Tycoon Saigon holdable card — grab foreclosed property at face value
+	this.taxAuditCard = false;    // Holdable card — play on your turn to trigger property tax on all players
 	this.bidding = true;
 	this.human = true;
 	// Tycoon Saigon — cost of living mechanic
@@ -2414,7 +2415,7 @@ function updateMoney() {
 		ranked.push({ index: i, name: pi.name, color: pi.color, money: pi.money,
 			assets: assets, debt: debt, interest: interest, nw: nw, dscr: dscr,
 			houses: houses, hotels: hotels, propCount: propCount,
-			snipe: pi.snipeCard || false, jailCards: jailCards,
+			snipe: pi.snipeCard || false, taxAudit: pi.taxAuditCard || false, jailCards: jailCards,
 			bankrupt: pi.bankrupt || false });
 	}
 	ranked.sort(function(a, b) { return b.nw - a.nw; });
@@ -2456,10 +2457,11 @@ function updateMoney() {
 			}
 			html += "</div>";
 			// Row 3: Held cards + credit warning (badges)
-			var hasBadges = rd.snipe || rd.jailCards > 0 || (rd.dscr !== Infinity && rd.dscr < DSCR_BORROW && rd.debt > 0);
+			var hasBadges = rd.snipe || rd.taxAudit || rd.jailCards > 0 || (rd.dscr !== Infinity && rd.dscr < DSCR_BORROW && rd.debt > 0);
 			if (hasBadges) {
 				html += "<div class='card-row'>";
 				if (rd.snipe) html += "<span class='card-badge card-badge-snipe'>SNIPE</span><span class='card-help'>?<span class='card-help-tip'>" + t('help_snipe') + "</span></span>";
+				if (rd.taxAudit) html += "<span class='card-badge card-badge-tax'>TAX</span><span class='card-help'>?<span class='card-help-tip'>" + t('help_tax_audit') + "</span></span>";
 				if (rd.jailCards > 0) html += "<span class='card-badge card-badge-jail'>JAIL&times;" + rd.jailCards + "</span><span class='card-help'>?<span class='card-help-tip'>" + t('help_jail') + "</span></span>";
 				if (rd.debt > 0 && rd.dscr !== Infinity && rd.dscr < DSCR_FLOOR) {
 					html += "<span class='card-badge card-badge-credit-danger'>" + t('credit_danger')
@@ -2496,6 +2498,9 @@ function updateMoney() {
 		if (p.human) $("#nextbutton").show();
 		else $("#nextbutton").hide();
 	}
+
+	if (p.human && p.taxAuditCard) $("#taxauditbutton").show();
+	else $("#taxauditbutton").hide();
 }
 
 function updateDice() {
@@ -2681,6 +2686,13 @@ function updateOwned() {
 			HTML += "<table>";
 		}
 		HTML += "<tr class='property-cell-row'><td class='propertycellcheckbox'><input type='checkbox' id='propertycheckbox42' /></td><td class='propertycellcolor' style='background: #006633;'></td><td class='propertycellname' style='color:#006633;font-weight:bold;'>Snipe Card</td></tr>";
+	}
+	if (p.taxAuditCard) {
+		if (HTML === "") {
+			firstproperty = 43;
+			HTML += "<table>";
+		}
+		HTML += "<tr class='property-cell-row'><td class='propertycellcheckbox'><input type='checkbox' id='propertycheckbox43' /></td><td class='propertycellcolor' style='background: #cc6600;'></td><td class='propertycellname' style='color:#cc6600;font-weight:bold;'>Tax Audit Card</td></tr>";
 	}
 
 	if (HTML === "") {
@@ -3532,6 +3544,69 @@ function drawSnipeCard() {
 			+ "</div>"
 		);
 	}
+}
+
+// ---- Tax Audit Card (holdable, Chance deck) ----
+function drawTaxAuditCard() {
+	if (!EVENTS_ENABLED) {
+		subtractamount(15, t('sq_chance'));
+		return;
+	}
+	var p = player[turn];
+	p.taxAuditCard = true;
+	addAlert(t('msg_tax_audit_draw', {name: p.name}));
+	if (typeof updateOwned === "function") updateOwned();
+
+	boardMsg(
+		"<div class='interest-alert' style='background:#cc6600;color:white;'>"
+		+ "<h3>" + t('tax_audit_card_title') + "</h3>"
+		+ "<p>" + t('tax_audit_card_draw_desc') + "</p>"
+		+ "</div>"
+	);
+}
+
+function playTaxAuditCard() {
+	var p = player[turn];
+	if (!p.taxAuditCard) return;
+	p.taxAuditCard = false;
+	trackEvent("tax_audit_played", { player: p.name, round: gameRound });
+	addAlert(t('msg_tax_audit_played', {name: p.name}));
+
+	var results = [];
+	for (var pi = 1; pi <= pcount; pi++) {
+		if (player[pi].bankrupt) continue;
+		var houses = 0, hotels = 0;
+		for (var i = 0; i < 40; i++) {
+			if (square[i].owner === pi) {
+				if (square[i].hotel === 1) hotels++;
+				else houses += square[i].house;
+			}
+		}
+		var cost = houses * TAX_PER_HOUSE + hotels * TAX_PER_HOTEL;
+		if (cost > 0) {
+			player[pi].money -= cost;
+			results.push({ name: player[pi].name, houses: houses, hotels: hotels, cost: cost, idx: pi });
+			addAlert(t('msg_prop_tax', {name: player[pi].name, cost: cost, houses: houses, hotels: hotels}));
+		} else {
+			results.push({ name: player[pi].name, houses: 0, hotels: 0, cost: 0, idx: pi });
+		}
+	}
+
+	var html = "<div class='interest-alert' style='background:#cc6600;color:white;'>"
+		+ "<h3>" + t('tax_audit_card_title') + "</h3>"
+		+ "<p>" + t('tax_audit_trigger_desc') + "</p>"
+		+ "<table style='width:100%;color:white;'>";
+	for (var i = 0; i < results.length; i++) {
+		var r = results[i];
+		html += "<tr><td>" + r.name + "</td><td style='text-align:right;'>"
+			+ r.houses + "H " + r.hotels + "&#9734;"
+			+ "</td><td style='text-align:right;font-weight:bold;'>-$" + r.cost + "</td></tr>";
+	}
+	html += "</table></div>";
+
+	updateOwned();
+	updateMoney();
+	boardMsg(html);
 }
 
 // ---- Casino (position 20, replaces Free Parking) ----

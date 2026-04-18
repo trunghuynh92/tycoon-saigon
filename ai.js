@@ -524,6 +524,24 @@ function aiWealthRank(playerIndex) {
 	return rank;
 }
 
+// Tax Audit AI: play the card if opponents have more buildings than you
+function aiPlayTaxAudit(p) {
+	if (!p.taxAuditCard) return false;
+	var myBuildings = 0, oppBuildings = 0;
+	for (var i = 0; i < 40; i++) {
+		if (square[i].owner === p.index) {
+			myBuildings += square[i].hotel ? 5 : square[i].house;
+		} else if (square[i].owner > 0) {
+			oppBuildings += square[i].hotel ? 5 : square[i].house;
+		}
+	}
+	if (oppBuildings > myBuildings + 3) {
+		playTaxAuditCard();
+		return true;
+	}
+	return false;
+}
+
 // Casino AI: returns tier index (0-5), or -1 to skip.
 // Trailing players bet big, leading players don't gamble.
 function aiCasinoBet(p) {
@@ -676,6 +694,7 @@ function AIShark(p) {
 
 	this.beforeTurn = function() {
 		tradedThisTurn = false;
+		if (aiPlayTaxAudit(p)) return true;
 
 		// 1. Build houses on any completed monopoly, cheapest square first,
 		//    evenly across the group (respects even-build).
@@ -847,6 +866,7 @@ function AICareful(p) {
 	};
 
 	this.beforeTurn = function() {
+		if (aiPlayTaxAudit(p)) return true;
 		// Build houses, but only when very flush AND only on completed monopolies.
 		for (var g = 3; g <= 10; g++) {
 			if (!aiOwnsMonopoly(p.index, g)) continue;
@@ -997,6 +1017,7 @@ function AIMonopolist(p) {
 
 	this.beforeTurn = function() {
 		tradedThisTurn = false;
+		if (aiPlayTaxAudit(p)) return true;
 
 		// 1. Build houses on completed monopolies — aggressively, within reason.
 		for (var g = 3; g <= 10; g++) {
@@ -1373,6 +1394,7 @@ function AIClaude(p) {
 
 	this.beforeTurn = function() {
 		tradedThisTurn = false;
+		if (aiPlayTaxAudit(p)) return true;
 
 		// 1. Build houses on monopolies
 		for (var g = 3; g <= 10; g++) {
