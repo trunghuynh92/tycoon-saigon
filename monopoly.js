@@ -1110,6 +1110,8 @@ function Game() {
 	};
 
 	this.trade = function(tradeObj) {
+		var hl = document.getElementById("trade-headline");
+		if (hl) { hl.style.display = "none"; hl.innerHTML = ""; }
 		showCenterPanel('center-trade');
 		$("#proposetradebutton").show();
 		$("#canceltradebutton").show();
@@ -1361,6 +1363,11 @@ function Game() {
 		addAlert(t('msg_trade_init', {name: initiator.name, other: recipient.name}) + " " + tradeSummary);
 
 		if (recipient.human) {
+			var hl = document.getElementById("trade-headline");
+			if (hl && !initiator.human) {
+				hl.innerHTML = t('pop_trade_proposed', {initiator: initiator.name, recipient: recipient.name});
+				hl.style.display = "block";
+			}
 			writeTrade(reversedTrade);
 			$("#proposetradebutton").hide();
 			$("#canceltradebutton").hide();
