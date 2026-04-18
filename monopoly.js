@@ -41,7 +41,7 @@ var MARGIN_CALL_ENABLED = true;  // Master toggle for the margin call system
 // ---- Casino (replaces Free Parking at position 20) ----
 // ---- Trade Abuse Prevention ----
 var TRADES_PER_TURN_LIMIT = 2;        // Max trade proposals per player per turn
-var TRADE_COOLDOWN_TURNS = 3;         // Turns before you can re-propose to the same player after rejection
+var TRADE_COOLDOWN_TURNS = 5;         // Turns before you can re-propose to the same player after rejection
 var humanTradesThisTurn = 0;          // Counter reset each turn
 var tradeCooldowns = {};              // Key: "initiatorIdx-recipientIdx", value: turn number when cooldown expires
 var lastRejectedTrade = null;         // Fingerprint of the last rejected trade for duplicate detection
